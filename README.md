@@ -1,7 +1,7 @@
-# Snow Leopard 
+# MUSE - Story Intelligence Platform
 
 Monorepo:
-- **apps/snow-leopard**: Next.js app
+- **apps/muse**: Next.js app
 - **packages/db**: Drizzle schema & migrations
 
 ## Tech Stack
@@ -18,18 +18,18 @@ From the project root:
 
 1. Clone & install:
    ```bash
-   git clone https://github.com/will-lp1/snowleopard.git
-   cd snowleopard
+   git clone https://github.com/YOUR_USERNAME/MUSE.git
+   cd MUSE
    pnpm install
    ```
 
 2. Copy env files:
    ```bash
    cp packages/db/.env.example packages/db/.env
-   cp apps/snow-leopard/.env.example apps/snow-leopard/.env
+   cp apps/muse/.env.example apps/muse/.env
    ```
    - Set **DATABASE_URL** in both.
-   - In `apps/snow-leopard/.env`, add:
+   - In `apps/muse/.env`, add:
      ```dotenv
      BETTER_AUTH_SECRET=""        # e.g., openssl rand -hex 32
      BETTER_AUTH_URL="http://localhost:3000"
