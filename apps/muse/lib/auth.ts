@@ -86,18 +86,20 @@ type HookUser = {
 
 const authPlugins: any[] = [];
 
-authPlugins.push(
-  stripe({
-    stripeClient: stripeClient!,
-    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
-    createCustomerOnSignUp: true,
-    subscription: {
-      enabled: stripeEnabled,
-      plans,
-      requireEmailVerification: emailVerificationEnabled,
-    },
-  })
-);
+if (stripeEnabled && stripeClient) {
+  authPlugins.push(
+    stripe({
+      stripeClient: stripeClient!,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+      createCustomerOnSignUp: true,
+      subscription: {
+        enabled: stripeEnabled,
+        plans,
+        requireEmailVerification: emailVerificationEnabled,
+      },
+    })
+  );
+}
 
 
 authPlugins.push(nextCookies());
