@@ -1,26 +1,34 @@
-# Snow Leopard
+# MUSE - Story Intelligence Platform
 
-> Tab, Tab, Apply Brilliance – an open-source AI writing tool that seamlessly integrates real-time inline suggestions, style consistency, and document management into a distraction-free writing workflow.
+> The Story Engine That Understands Stories – an AI-powered platform that analyzes narratives, tracks characters, and provides intelligent insights to help writers craft better stories.
 
-Snow Leopard transforms the writing process by placing AI-powered recommendations directly in your text as you type. It refines clarity, grammar, and style without interrupting creative flow. Writers can organize projects, track revisions, and publish content—all within a single interface.
+MUSE transforms storytelling by understanding narrative structure, character development, and plot dynamics. It provides writers with intelligent analysis, suggestions, and tracking tools to enhance their creative process while maintaining their unique voice.
 
 ## Core Features
-- [Inline Suggestions](https://www.cursorforwrit.ing): Contextual recommendations that appear as you write
-- [Style Consistency](https://www.cursorforwrit.ing): Maintain your unique voice with AI-driven edits
-- [Document Management](https://www.cursorforwrit.ing/documents): Create, organize, and track revisions in one place
-- [Publishing Tools](https://www.cursorforwrit.ing): Publish articles or share links directly from the platform
+- [Story Analysis](https://muse-story.app): Intelligent narrative structure detection and analysis
+- [Character Tracking](https://muse-story.app): Monitor character development and relationships
+- [Plot Visualization](https://muse-story.app): Visual representations of story arcs and pacing
+- [Writing Analytics](https://muse-story.app): Insights into writing patterns and story health
 
 ## Key Pages
-- [Home](https://www.cursorforwrit.ing): Feature overview and demo
-- [Login](https://www.cursorforwrit.ing/login): Secure authentication
-- [Register](https://www.cursorforwrit.ing/register): New user signup
-- [Workspace](https://www.cursorforwrit.ing/documents): Main writing environment
-- [Published Content](https://www.cursorforwrit.ing/{author}/{slug}): Publicly shared articles (dynamic)
+- [Home](https://muse-story.app): Platform overview and story intelligence demo
+- [Login](https://muse-story.app/login): Secure writer authentication
+- [Register](https://muse-story.app/register): New storyteller signup
+- [Workspace](https://muse-story.app/documents): Story creation and analysis environment
+- [Published Stories](https://muse-story.app/{author}/{slug}): Publicly shared narratives (dynamic)
 
 ## Developer & Resources
-- [API Reference](https://www.cursorforwrit.ing/api): Endpoints for document and AI chat operations
-- [GitHub Repository](https://github.com/will-lp1/snowleopard): Source code, issues, and contributions
+- [API Reference](https://muse-story.app/api): Endpoints for story analysis and document operations
+- [GitHub Repository](https://github.com/eddiebe147/MUSE): Source code, issues, and contributions
+
+## Story Intelligence Features
+- Narrative structure analysis (3-act, hero's journey, etc.)
+- Character arc tracking and development insights
+- Dialogue analysis and balance metrics
+- Pacing and tension visualization
+- Theme detection and consistency checking
+- Plot hole identification and suggestions
 
 ## Optional
-- [robots.txt](https://www.cursorforwrit.ing/robots.txt): Crawling rules
-- [sitemap.xml](https://www.cursorforwrit.ing/sitemap.xml): Sitemap of public routes
+- [robots.txt](https://muse-story.app/robots.txt): Crawling rules
+- [sitemap.xml](https://muse-story.app/sitemap.xml): Sitemap of public routes

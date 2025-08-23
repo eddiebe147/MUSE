@@ -73,7 +73,7 @@ const resend = emailVerificationEnabled && process.env.RESEND_API_KEY
 
 const plans = [
   {
-    name: "snowleopard",
+    name: "muse",
     priceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID!,
     annualDiscountPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID!,
   },

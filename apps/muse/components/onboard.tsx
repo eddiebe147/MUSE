@@ -56,7 +56,7 @@ export function Onboard({ isOpen, onOpenChange, required = false }: OnboardProps
           <div className="relative h-64 md:h-full overflow-hidden">
             <Image
               src="/images/snowleopards.jpg"
-              alt="Snow Leopard"
+              alt="MUSE"
               layout="fill"
               objectFit="cover"
               className="filter grayscale contrast-110 brightness-90"
@@ -64,14 +64,14 @@ export function Onboard({ isOpen, onOpenChange, required = false }: OnboardProps
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-black/40 md:via-transparent"></div>
             <div className="absolute top-8 left-8 z-10">
-              <h1 className="text-lg font-normal text-white/80">snow leopard</h1>
+              <h1 className="text-lg font-normal text-white/80">MUSE</h1>
             </div>
           </div>
           <div className="p-8 md:p-10 flex flex-col relative">
             <DialogHeader className="mb-4 text-left">
               <DialogTitle className="text-2xl sm:text-3xl font-semibold">Start Your Free Trial</DialogTitle>
               <DialogDescription className="mt-1 text-sm text-muted-foreground">
-                Try Snow Leopard free for 3 days. No credit card required.
+                Try MUSE free for 3 days. No credit card required.
               </DialogDescription>
             </DialogHeader>
             {/* Features list removed for simplicity */}

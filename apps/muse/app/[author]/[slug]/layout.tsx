@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: any) {
     .limit(1);
   const doc = result[0];
   if (!doc) {
-    return { title: 'Snow Leopard' };
+    return { title: 'MUSE' };
   }
   const dateString = new Date(doc.createdAt).toLocaleDateString('en-US');
   const title = doc.title;

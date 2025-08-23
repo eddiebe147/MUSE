@@ -95,7 +95,7 @@ export default function Home() {
       <header className="absolute top-0 w-full z-10 py-4">
         <div className="container mx-auto flex justify-between items-center px-6 md:px-8 lg:px-12">
           <h1 className="text-xl font-normal tracking-tighter text-foreground/90">
-            snow leopard
+            MUSE
           </h1>
           <Button
             variant="outline"
@@ -120,7 +120,7 @@ export default function Home() {
               <h2
                 className={`text-6xl md:text-[128px] ${crimson.className} tracking-[-0.08em] leading-none text-foreground`}
               >
-                Tab, Tab, Apply
+                Understand, Analyze
               </h2>
             </div>
 
@@ -128,7 +128,7 @@ export default function Home() {
               <h3
                 className={`text-6xl md:text-[128px] ${crimson.className} tracking-[-0.06em] leading-none text-foreground `}
               >
-                Brilliance
+                Stories
                 <span className="animate-blink ml-0.5 font-normal">|</span>
               </h3>
             </div>
@@ -136,8 +136,8 @@ export default function Home() {
 
           {/* Tagline */}
           <p className="text-xl text-muted-foreground mt-4 max-w-md text-balance mx-auto font-light">
-            The most satisfying, intuitive AI writing tool, and it&apos;s open
-            source.
+            The Story Engine That Understands Stories.
+            Analyze narratives, track characters, and unlock story intelligence.
           </p>
 
           {/* CTA Buttons */}
@@ -154,7 +154,7 @@ export default function Home() {
               </span>
             </Button>
             <Button asChild variant="secondary" size="sm" className="rounded-full">
-              <Link href="https://github.com/will-lp1/snowleopard" target="_blank" rel="noopener noreferrer">
+              <Link href="https://github.com/eddiebe147/MUSE" target="_blank" rel="noopener noreferrer">
                 GitHub{" "}
                 <span className="inline-block ml-2 text-xs transition-transform group-hover:translate-x-0.5">
                   ›
@@ -167,7 +167,7 @@ export default function Home() {
             <div className="hero-frame">
               <Image
                 src="/images/lightmode.png"
-                alt="Snow Leopard Demo Preview"
+                alt="MUSE Story Intelligence Preview"
                 width={1200}
                 height={675}
                 className="rounded-lg block dark:hidden"
@@ -175,7 +175,7 @@ export default function Home() {
               />
               <Image
                 src="/images/darkmode.png"
-                alt="Snow Leopard Demo Preview (Dark Mode)"
+                alt="MUSE Story Intelligence Preview (Dark Mode)"
                 width={1200}
                 height={675}
                 className="rounded-lg hidden dark:block"
@@ -195,10 +195,10 @@ export default function Home() {
         <div className="container mx-auto px-6 md:px-8 lg:px-12">
           <div className="text-center mb-16">
             <h2 id="features-heading" className={`text-4xl md:text-5xl font-medium ${crimson.className} tracking-tight text-foreground`}>
-              Explore the Magic
+              Story Intelligence Features
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-              Discover how Snow Leopard transforms your writing experience with these core features.
+              Discover how MUSE transforms your storytelling with intelligent analysis and insights.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -212,7 +212,7 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
-                  Real-time Inline Suggestions
+                  Story Structure Analysis
                 </CardHeader>
                 <CardContent className="p-6 text-sm text-muted-foreground flex-grow">
                   <p className="demo-prose-mirror-style">
@@ -236,7 +236,7 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
-                  Powerful Selection Edits
+                  Character Development Tracking
                 </CardHeader>
                 <CardContent className="p-6 text-sm text-muted-foreground flex-grow relative overflow-visible">
                   <p className="demo-prose-mirror-style">
@@ -472,11 +472,11 @@ export default function Home() {
                 <span>We&apos;re open-source & self-hostable</span>
                 <a
                   className="github-button"
-                  href="https://github.com/will-lp1/snowleopard"
+                  href="https://github.com/eddiebe147/MUSE"
                   data-icon="octicon-star"
                   data-size="large"
                   data-show-count="true"
-                  aria-label="Star will-lp1/snowleopard on GitHub"
+                  aria-label="Star eddiebe147/MUSE on GitHub"
                 >
                   Star
                 </a>
@@ -491,7 +491,7 @@ export default function Home() {
               className="rounded-full px-8 py-3"
               onClick={handleBeginClick}
             >
-              {hasSession ? "Open Snow Leopard" : "Get Started"}
+              {hasSession ? "Open MUSE" : "Get Started"}
             </Button>
             <p className="mt-2 text-xs text-muted-foreground">No credit card required</p>
           </div>
@@ -500,9 +500,9 @@ export default function Home() {
 
       <footer className="w-full border-t border-border bg-background/80 backdrop-blur-sm py-4 mt-8">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 flex items-center justify-between text-sm text-muted-foreground">
-          <span>© {new Date().getFullYear()} Snow Leopard. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} MUSE. All rights reserved.</span>
           <Button variant="outline" size="icon" className="size-8 shrink-0" asChild>
-            <Link href="https://github.com/will-lp1/snowleopard" target="_blank" rel="noopener noreferrer">
+            <Link href="https://github.com/eddiebe147/MUSE" target="_blank" rel="noopener noreferrer">
               <Image src="/images/github-logo.png" alt="Github" width={16} height={16} className="dark:invert" />
             </Link>
           </Button>
