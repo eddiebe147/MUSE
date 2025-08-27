@@ -1,0 +1,211 @@
+/* Enhanced Writing Canvas Styles */
+
+/* Professional cursor enhancements */
+.writing-canvas-enhanced {
+  /* Enhanced cursor visibility */
+  caret-color: rgb(147, 51, 234);
+  caret-shape: block;
+}
+
+.writing-canvas-enhanced:focus {
+  caret-color: rgb(168, 85, 247);
+}
+
+/* Dark theme cursor adjustments */
+.dark .writing-canvas-enhanced {
+  caret-color: rgb(196, 181, 253);
+}
+
+.dark .writing-canvas-enhanced:focus {
+  caret-color: rgb(221, 214, 254);
+}
+
+/* Better text selection for writing */
+.writing-canvas-enhanced::selection {
+  background-color: rgba(147, 51, 234, 0.15);
+  color: inherit;
+}
+
+.dark .writing-canvas-enhanced::selection {
+  background-color: rgba(196, 181, 253, 0.25);
+  color: inherit;
+}
+
+/* Smooth cursor blink animation */
+@keyframes cursor-blink {
+  0%, 50% { 
+    opacity: 1; 
+  }
+  51%, 100% { 
+    opacity: 0.3; 
+  }
+}
+
+/* Writing flow enhancements */
+.writing-flow {
+  /* Improved line height for readability */
+  line-height: 1.75;
+  
+  /* Better letter spacing */
+  letter-spacing: 0.01em;
+  
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+}
+
+.writing-flow-minimal {
+  line-height: 1.85;
+  letter-spacing: 0.015em;
+}
+
+/* Focus ring enhancements */
+.writing-focus:focus-visible {
+  outline: 2px solid rgba(147, 51, 234, 0.2);
+  outline-offset: -1px;
+  border-radius: 6px;
+}
+
+.dark .writing-focus:focus-visible {
+  outline: 2px solid rgba(196, 181, 253, 0.3);
+}
+
+/* Formatting toolbar animations */
+.formatting-toolbar-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: toolbar-slide-in 0.2s ease-out forwards;
+}
+
+@keyframes toolbar-slide-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formatting-toolbar-exit {
+  opacity: 1;
+  animation: toolbar-slide-out 0.2s ease-in forwards;
+}
+
+@keyframes toolbar-slide-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Format button active states */
+.format-button-active {
+  background-color: rgba(147, 51, 234, 0.1);
+  color: rgb(147, 51, 234);
+  border-color: rgba(147, 51, 234, 0.2);
+}
+
+.dark .format-button-active {
+  background-color: rgba(196, 181, 253, 0.15);
+  color: rgb(196, 181, 253);
+  border-color: rgba(196, 181, 253, 0.25);
+}
+
+/* Hover states for format buttons */
+.format-button:hover {
+  background-color: rgba(147, 51, 234, 0.05);
+  transform: translateY(-1px);
+}
+
+.dark .format-button:hover {
+  background-color: rgba(196, 181, 253, 0.08);
+}
+
+/* Typing indicator enhancements */
+.typing-indicator {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Professional typography improvements */
+.writing-typography {
+  font-feature-settings: 
+    "liga" 1,      /* Enable ligatures */
+    "kern" 1,      /* Enable kerning */
+    "onum" 1,      /* Old-style numerals */
+    "pnum" 1;      /* Proportional numerals */
+}
+
+/* Minimal mode enhancements */
+.minimal-mode-overlay {
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .minimal-mode-overlay {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced placeholder styling */
+.enhanced-placeholder::placeholder {
+  color: rgba(107, 114, 128, 0.6);
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.enhanced-placeholder:focus::placeholder {
+  opacity: 0.4;
+  color: rgba(147, 51, 234, 0.4);
+}
+
+.dark .enhanced-placeholder::placeholder {
+  color: rgba(156, 163, 175, 0.6);
+}
+
+.dark .enhanced-placeholder:focus::placeholder {
+  color: rgba(196, 181, 253, 0.4);
+}
+
+/* Word count and stats styling */
+.writing-stats {
+  font-feature-settings: "tnum" 1; /* Tabular numerals for consistent spacing */
+}
+
+/* Smooth transitions for all interactive elements */
+.writing-canvas-enhanced,
+.format-button,
+.writing-stats,
+.enhanced-placeholder {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus trap for minimal mode */
+.minimal-mode-focus-trap:focus {
+  outline: none;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .writing-canvas-enhanced,
+  .format-button,
+  .formatting-toolbar-enter,
+  .formatting-toolbar-exit {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .writing-canvas-enhanced {
+    caret-color: currentColor;
+  }
+  
+  .format-button-active {
+    border: 2px solid currentColor;
+  }
+}

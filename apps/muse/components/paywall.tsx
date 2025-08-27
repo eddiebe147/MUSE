@@ -158,7 +158,7 @@ export function Paywall({ isOpen, onOpenChange, required = false }: PaywallProps
               alt="Snow Leopard"
               layout="fill"
               objectFit="cover"
-              className="filter grayscale contrast-110 brightness-90"
+              className="grayscale contrast-110 brightness-90"
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-black/40 md:via-transparent"></div>
@@ -193,7 +193,7 @@ export function Paywall({ isOpen, onOpenChange, required = false }: PaywallProps
               </div>
             )}
 
-            <div className="flex-grow">
+            <div className="grow">
               <DialogHeader className="mb-6 text-left">
                 <DialogTitle className="text-xl md:text-2xl font-semibold">Upgrade to Pro</DialogTitle>
                 <DialogDescription className="text-sm mb-6">
@@ -213,7 +213,7 @@ export function Paywall({ isOpen, onOpenChange, required = false }: PaywallProps
                       { 'bg-muted/30': plan.annual }
                     )}
                   >
-                    <div className="flex-grow">
+                    <div className="grow">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-semibold text-lg">{plan.displayName}</h4>
                         {plan.annual && <div className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Save {plan.discount}%</div>}
@@ -230,7 +230,7 @@ export function Paywall({ isOpen, onOpenChange, required = false }: PaywallProps
                       <ul className="mt-6 space-y-2">
                         {plan.features.map((feature) => (
                           <li key={feature} className="flex items-center gap-3 text-sm text-muted-foreground">
-                            <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                            <Check className="size-4 text-green-500 shrink-0" />
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -256,10 +256,10 @@ export function Paywall({ isOpen, onOpenChange, required = false }: PaywallProps
             </div>
 
             <DialogFooter className="mt-6 pt-4 border-t flex flex-col sm:flex-row items-center gap-2 sm:gap-0">
-              <p className="text-xs text-muted-foreground flex-shrink-0">
+              <p className="text-xs text-muted-foreground shrink-0">
                   much love, will - founder of snow leopard
               </p>
-              <div className="flex-grow" />
+              <div className="grow" />
               <Button
                 variant="ghost"
                 className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5" // Style from overview.tsx

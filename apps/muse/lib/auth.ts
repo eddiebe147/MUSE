@@ -175,3 +175,6 @@ export const auth = betterAuth({
 
 export type Session = typeof auth.$Infer.Session;
 export type User = Session["user"];
+
+export const getSession = auth.api.getSession;
+export const { signIn, signOut, signUp } = auth;

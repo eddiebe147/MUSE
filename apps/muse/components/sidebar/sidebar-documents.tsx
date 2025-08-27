@@ -577,7 +577,7 @@ export function SidebarDocuments({ user, initialDocuments }: { user?: User; init
                 placeholder="Search documents..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-7 text-xs border border-r bg-sidebar-accent"
+                className="h-7 text-xs border bg-sidebar-accent"
               />
             </div>
             

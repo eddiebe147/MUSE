@@ -148,7 +148,7 @@ export function ResizablePanel({
               right: isOpen ? '0px' : `-${size}px`,
             }}
           >
-            <div className="h-full w-full">{children}</div>
+            <div className="size-full">{children}</div>
           </div>
         </>
       )}

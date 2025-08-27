@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { toggleMark, setBlockType } from 'prosemirror-commands';
+import { toggleMark, setBlockType , wrapIn, lift } from 'prosemirror-commands';
 import { wrapInList, liftListItem } from 'prosemirror-schema-list';
 import {
   List,
@@ -25,7 +25,6 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 
-import { wrapIn, lift } from 'prosemirror-commands';
 
 import {
   Tooltip,
@@ -119,7 +118,7 @@ export function EditorToolbar({ activeFormats }: EditorToolbarProps) {
       {/* Toolbar left side */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="h-8 px-3 min-w-[7rem] flex items-center justify-between gap-2 text-sm rounded-md border border-border bg-background text-foreground" tabIndex={0}>
+          <Button variant="outline" className="h-8 px-3 min-w-28 flex items-center justify-between gap-2 text-sm rounded-md border border-border bg-background text-foreground" tabIndex={0}>
             <span className="truncate text-sm font-medium">{currentTextStyle}</span>
             <ChevronDown className="size-4 ml-1 text-muted-foreground" />
           </Button>

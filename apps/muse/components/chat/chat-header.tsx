@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect , memo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
@@ -11,10 +11,8 @@ import { ModelSelector } from '@/components/chat/model-selector';
 import { Button } from '@/components/ui/button';
 import { PlusIcon, ClockRewind, MessageIcon } from '../icons';
 import { useSidebar } from '../ui/sidebar';
-import { memo } from 'react';
-import { cn } from '@/lib/utils';
+import { cn , fetcher } from '@/lib/utils';
 import { useDocument } from '@/hooks/use-document';
-import { fetcher } from '@/lib/utils';
 import type { Chat } from '@muse/db';
 import {
   DropdownMenu,
@@ -70,7 +68,7 @@ function PureChatHeader({
     >
       <Button
         variant="outline"
-        className="h-8 flex items-center justify-center dark:hover:bg-zinc-700 w-8 p-0 border-r border-border"
+        className="size-8 flex items-center justify-center dark:hover:bg-zinc-700 p-0 border-r border-border"
         onClick={handleResetChat}
         disabled={isCreatingChat}
         title="New Chat"
@@ -86,7 +84,7 @@ function PureChatHeader({
       </Button>
 
       {!isReadonly && mounted && (
-        <div className="transition-all duration-200 min-w-0 flex-shrink">
+        <div className="transition-all duration-200 min-w-0 shrink">
           <ModelSelector
             selectedModelId={selectedModelId}
             className={cn("ml-0", {
@@ -143,7 +141,7 @@ function PureChatHeader({
                     <div className="mt-1.5 pt-1.5 border-t border-border/50 text-xs flex flex-col gap-1 overflow-hidden">
                       {chat.document_context.active && (
                         <div className="flex items-center gap-1.5 text-muted-foreground truncate">
-                          <span className="font-medium text-foreground/80 flex-shrink-0">Active:</span>
+                          <span className="font-medium text-foreground/80 shrink-0">Active:</span>
                           <Link 
                             href={`/documents/${chat.document_context.active}`}
                             className="truncate hover:underline text-blue-500 dark:text-blue-400"
@@ -156,7 +154,7 @@ function PureChatHeader({
                       )}
                       {chat.document_context.mentioned && chat.document_context.mentioned.length > 0 && (
                         <div className="flex items-start gap-1.5 text-muted-foreground">
-                          <span className="font-medium text-foreground/80 flex-shrink-0 pt-px">Mentioned:</span>
+                          <span className="font-medium text-foreground/80 shrink-0 pt-px">Mentioned:</span>
                           <div className="flex flex-wrap gap-x-2 gap-y-1 overflow-hidden">
                             {chat.document_context.mentioned.map((docId: string, index: number) => (
                               <Link 

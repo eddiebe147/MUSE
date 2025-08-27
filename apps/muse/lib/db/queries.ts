@@ -1,7 +1,7 @@
 import 'server-only';
 import { db } from '@muse/db'; 
 import * as schema from '@muse/db'; 
-import { eq, desc, asc, inArray, gt, and, sql, lt } from 'drizzle-orm'; // Import Drizzle operators and
+import { eq, desc, asc, inArray, gt, and, sql, lt, or } from 'drizzle-orm'; // Import Drizzle operators and
 
 type Chat = typeof schema.Chat.$inferSelect; 
 type Message = typeof schema.Message.$inferSelect; 
@@ -948,5 +948,92 @@ export async function unpublishAllDocumentsByUserId({ userId }: { userId: string
   } catch (error) {
     console.error(`[DB Query - unpublishAllDocumentsByUserId] Error un-publishing documents for user ${userId}:`, error);
     throw new Error('Failed to un-publish documents.');
+  }
+}
+
+// --- Story Intelligence Counting Queries --- //
+
+export async function getStoryIntelligenceCounts({ userId }: { userId: string }): Promise<{
+  documentCount: number;
+  characterCount: number;
+  transcriptCount: number;
+  workflowCount: number;
+  guidelineCount: number;
+}> {
+  try {
+    // Get current documents count (existing functionality)
+    const documentCountQuery = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.Document)
+      .where(
+        and(
+          eq(schema.Document.userId, userId),
+          eq(schema.Document.is_current, true)
+        )
+      );
+    
+    // Get characters count from user's story projects
+    const characterCountQuery = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.characters)
+      .innerJoin(schema.story_projects, eq(schema.characters.story_project_id, schema.story_projects.id))
+      .where(eq(schema.story_projects.user_id, userId));
+    
+    // Get transcripts count from user's story projects
+    const transcriptCountQuery = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.transcripts)
+      .innerJoin(schema.story_projects, eq(schema.transcripts.story_project_id, schema.story_projects.id))
+      .where(eq(schema.story_projects.user_id, userId));
+    
+    // Get workflows count from user's story projects
+    const workflowCountQuery = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.phase_workflows)
+      .innerJoin(schema.story_projects, eq(schema.phase_workflows.story_project_id, schema.story_projects.id))
+      .where(eq(schema.story_projects.user_id, userId));
+    
+    // Get guidelines count (both project-specific and global ones accessible to user)
+    const guidelineCountQuery = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.production_guidelines)
+      .leftJoin(schema.story_projects, eq(schema.production_guidelines.story_project_id, schema.story_projects.id))
+      .where(
+        or(
+          eq(schema.story_projects.user_id, userId),
+          eq(schema.production_guidelines.is_global, true)
+        )
+      );
+    
+    // Get production bible documents count for the user (optional - table might not exist yet)
+    let productionBibleCount = 0;
+    try {
+      const productionBibleCountQuery = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(schema.production_bible_documents)
+        .where(eq(schema.production_bible_documents.user_id, userId));
+      productionBibleCount = Number(productionBibleCountQuery[0]?.count || 0);
+    } catch (error) {
+      console.warn('[DB Query - getStoryIntelligenceCounts] Production bible table not available yet:', error);
+      productionBibleCount = 0;
+    }
+
+    return {
+      documentCount: Number(documentCountQuery[0]?.count || 0),
+      characterCount: Number(characterCountQuery[0]?.count || 0),
+      transcriptCount: Number(transcriptCountQuery[0]?.count || 0),
+      workflowCount: Number(workflowCountQuery[0]?.count || 0),
+      guidelineCount: Number(guidelineCountQuery[0]?.count || 0) + productionBibleCount,
+    };
+  } catch (error) {
+    console.error(`[DB Query - getStoryIntelligenceCounts] Error fetching counts for user ${userId}:`, error);
+    // Return zeros on error to show empty states
+    return {
+      documentCount: 0,
+      characterCount: 0,
+      transcriptCount: 0,
+      workflowCount: 0,
+      guidelineCount: 0,
+    };
   }
 }

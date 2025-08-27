@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { toast } from '@/components/toast';
 import { AuthForm } from '@/components/auth-form';
 import { SubmitButton } from '@/components/submit-button';
+import { GuestConversionHandler } from '@/components/guest-conversion';
 
 const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === 'true';
 const githubEnabled = process.env.NEXT_PUBLIC_GITHUB_ENABLED === 'true';
@@ -116,6 +117,15 @@ export default function RegisterPage() {
             </SubmitButton>
           </AuthForm>
         </div>
+        
+        <GuestConversionHandler 
+          onConversionComplete={() => {
+            toast({
+              type: 'success',
+              description: 'Your guest project has been saved to your account!'
+            });
+          }}
+        />
         
         <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-zinc-400">

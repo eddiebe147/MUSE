@@ -9,14 +9,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn , fetcher } from '@/lib/utils';
 import { Loader2, GlobeIcon, CopyIcon, Edit2, Check } from 'lucide-react';
 import type { Document } from '@muse/db';
 import type { User } from '@/lib/auth';
 import useSWR from 'swr';
 import debounce from 'lodash.debounce';
 import { toast } from 'sonner';
-import { fetcher } from '@/lib/utils';
 import useSWRMutation from 'swr/mutation';
 import { Paywall } from '@/components/paywall';
 import { googleFonts, FontOption } from '@/lib/fonts';
@@ -311,7 +310,7 @@ export function PublishSettingsMenu({ document, user, onUpdate }: PublishSetting
                   <Button
                     size="icon"
                     variant="outline"
-                    className="h-8 w-8 flex-shrink-0"
+                    className="size-8 shrink-0"
                     onClick={claimUsername}
                     disabled={claiming}
                   >
@@ -322,7 +321,7 @@ export function PublishSettingsMenu({ document, user, onUpdate }: PublishSetting
                   <Button
                     size="icon"
                     variant="outline"
-                    className="h-8 w-8 flex-shrink-0"
+                    className="size-8 shrink-0"
                     onClick={() => {
                       setHasUsername(false);
                       setUsernameCheck({ checking: false, available: null });

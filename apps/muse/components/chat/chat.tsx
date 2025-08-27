@@ -5,16 +5,14 @@ import { useChat } from '@ai-sdk/react';
 import { useState, useEffect } from 'react';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { generateUUID } from '@/lib/utils';
-import { MultimodalInput } from './multimodal-input';
+import { MultimodalInput , MentionedDocument } from './multimodal-input';
 import { Messages } from './messages';
 import { toast } from 'sonner';
-import { FileText } from 'lucide-react';
-import { MentionedDocument } from './multimodal-input';
+import { FileText , Loader2 } from 'lucide-react';
 import { useDocument } from '@/hooks/use-document';
 import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models';
 import { DataStreamHandler } from '@/components/data-stream-handler';
 import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
 import { useAiOptionsValue } from '@/hooks/ai-options';
 
 export interface ChatProps {
@@ -272,7 +270,7 @@ export function Chat({
       <div className="flex-1 overflow-y-auto relative">
         {isLoadingChat ? (
            <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm z-10">
-             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+             <Loader2 className="size-8 animate-spin text-muted-foreground" />
            </div>
          ) : (
           <Messages

@@ -6,6 +6,13 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const sessionCookie = getSessionCookie(request);
 
+  // In development mode, redirect root to writing interface for easier testing
+  if (process.env.NODE_ENV === 'development' && pathname === '/') {
+    const writeUrl = request.nextUrl.clone();
+    writeUrl.pathname = '/write/test';
+    return NextResponse.redirect(writeUrl);
+  }
+
   // Redirect unauthenticated users away from protected routes
   if (pathname.startsWith('/documents')) {
     if (!sessionCookie) {

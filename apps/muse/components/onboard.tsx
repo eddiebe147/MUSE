@@ -59,7 +59,7 @@ export function Onboard({ isOpen, onOpenChange, required = false }: OnboardProps
               alt="MUSE"
               layout="fill"
               objectFit="cover"
-              className="filter grayscale contrast-110 brightness-90"
+              className="grayscale contrast-110 brightness-90"
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-black/40 md:via-transparent"></div>

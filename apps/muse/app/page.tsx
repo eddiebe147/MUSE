@@ -79,10 +79,13 @@ export default function Home() {
   }, [router]);
 
   const handleBeginClick = () => {
+    // Skip onboarding - go directly to writing interface
     if (hasSession) {
-      router.push("/documents");
+      // Logged in users: go to project dashboard  
+      router.push("/write");
     } else {
-      router.push("/login?redirect=/documents");
+      // Guest users: still need to sign up/in first
+      router.push("/onboarding");
     }
   };
 
@@ -112,7 +115,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="hero" className="pt-20 pb-20 bg-background">
+      <section id="hero" className="py-20 bg-background">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 flex flex-col items-center text-center">
           {/* Title Group */}
           <div className="space-y-0">
@@ -208,13 +211,13 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={card1InView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full h-full"
+              className="size-full"
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
                   Story Structure Analysis
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground flex-grow">
+                <CardContent className="p-6 text-sm text-muted-foreground grow">
                   <p className="demo-prose-mirror-style">
                     <span className="demo-text-base">You start typing, and the AI offers</span>
                     <span className="inline-suggestion-wrapper">
@@ -232,13 +235,13 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={card2InView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full h-full"
+              className="size-full"
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
                   Character Development Tracking
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground flex-grow relative overflow-visible">
+                <CardContent className="p-6 text-sm text-muted-foreground grow relative overflow-visible">
                   <p className="demo-prose-mirror-style">
                     <span className="demo-text-base">This phrasing <span className="demo-selected-text-animated">is a bit weak and verbose.</span> Let&apos;s ask the AI to improve it.</span>
                   </p>
@@ -272,13 +275,13 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={card3InView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="w-full h-full"
+              className="size-full"
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
                   Instant Synonym Finder
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground flex-grow">
+                <CardContent className="p-6 text-sm text-muted-foreground grow">
                   <p className="demo-prose-mirror-style relative">
                     <span className="demo-text-base">Find better words with ease. The AI presents contextually</span>
                     <span className="demo-synonym-word-animated" data-word="relevant">
@@ -301,14 +304,14 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={card4InView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full h-full"
+              className="size-full"
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
                   AI Writing That Sounds Like You
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground flex-grow flex flex-col justify-between items-center">
-                  <div className="w-full flex flex-col items-center flex-grow justify-center">
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between items-center">
+                  <div className="w-full flex flex-col items-center grow justify-center">
                     <StyleToggleDemo inView={card4InView} />
                   </div>
                   <p className="text-center w-full mt-8">Trained on your writing to apply your unique style.</p>
@@ -322,13 +325,13 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={card5InView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="w-full h-full"
+              className="size-full"
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl">
                 <CardHeader className="p-6 text-base font-medium">
                   Access Premium Models
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground flex-grow flex flex-col justify-between items-center">
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between items-center">
                   <div className="w-full flex items-center justify-center gap-0" style={{ height: '112px' }}>
                     {modelNames.map((name, i) => {
                       const mid = (modelNames.length - 1) / 2;
@@ -364,13 +367,13 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={card6InView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="w-full h-full"
+              className="size-full"
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl">
                 <CardHeader className="p-6 text-base font-medium">
                   One-Click Publish & Share
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground flex-grow flex flex-col justify-between items-center">
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between items-center">
                   <div className="w-full flex flex-col items-center">
                     {/* Mini page preview */}
                     <div className="relative w-44 h-32 rounded-lg border border-border bg-background shadow-sm overflow-hidden">
@@ -411,7 +414,7 @@ export default function Home() {
           
           <TooltipProvider>
             <div className="flex flex-col items-center justify-center gap-5 max-w-3xl mx-auto">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-x-2 gap-y-2 text-base text-muted-foreground">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-base text-muted-foreground">
                 <span>Used by</span>
                 <Link 
                   href="https://twitter.com/dps" 
@@ -438,7 +441,7 @@ export default function Home() {
                 />
               </div>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-x-2 gap-y-2 text-base text-muted-foreground">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-base text-muted-foreground">
                 <span>Part of the</span>
                 <Link
                   href="https://vercel.com/ai-accelerator"

@@ -78,7 +78,7 @@ export function DocumentActions({
           <TooltipTrigger asChild>
             <Button
               variant="outline"
-              className="h-8 w-8 p-0"
+              className="size-8 p-0"
               disabled={disabled}
               onClick={onClick}
             >
@@ -93,7 +93,7 @@ export function DocumentActions({
         <TooltipTrigger asChild>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="size-8 p-0"
             onClick={() => {
               navigator.clipboard.writeText(content);
               toast.success("Copied to clipboard!");

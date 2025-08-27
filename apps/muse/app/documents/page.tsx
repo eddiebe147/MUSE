@@ -1,24 +1,29 @@
 import { redirect } from 'next/navigation';
 import { getSession, getUser } from '@/app/(auth)/auth';
-import { AlwaysVisibleArtifact } from '@/components/document/document-workspace';
+import { shouldShowOnboarding } from '@/lib/onboarding-helpers';
+import { ProjectDashboard } from '@/components/writing-workflow/project-dashboard';
 
 export default async function Page() {
   const session = await getSession();
 
   if (!session?.user?.id) { 
-    redirect('/'); 
+    // Redirect unauthenticated users to onboarding instead of login
+    redirect('/onboarding'); 
   }
 
   const user = await getUser();
   if (!user) {
-    redirect('/');
+    redirect('/onboarding');
+  }
+
+  // Check if user should complete onboarding first
+  const needsOnboarding = await shouldShowOnboarding(user.id);
+  if (needsOnboarding) {
+    redirect('/onboarding');
   }
 
   return (
-    <AlwaysVisibleArtifact 
-      chatId="new-chat"
-      initialDocumentId="init"
-      initialDocuments={[]} 
+    <ProjectDashboard 
       user={user}
     />
   );

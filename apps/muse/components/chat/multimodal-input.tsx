@@ -22,7 +22,7 @@ import { toast } from 'sonner';
 import { useLocalStorage, useWindowSize } from 'usehooks-ts';
 import { MentionsInput, Mention, type SuggestionDataItem, type MentionsInputProps } from 'react-mentions';
 
-import { sanitizeUIMessages } from '@/lib/utils';
+import { sanitizeUIMessages , cn, generateUUID } from '@/lib/utils';
 
 import { ArrowUpIcon, StopIcon, FileIcon } from '../icons';
 import { Button } from '../ui/button';
@@ -31,7 +31,6 @@ import { SuggestedActions } from '../suggested-actions';
 import equal from 'fast-deep-equal';
 import { UseChatHelpers, UseChatOptions } from '@ai-sdk/react';
 import { useDocument } from '@/hooks/use-document';
-import { cn, generateUUID } from '@/lib/utils';
 
 interface DocumentSuggestion extends SuggestionDataItem {
   id: string;

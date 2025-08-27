@@ -448,7 +448,7 @@ export function AlwaysVisibleArtifact({
                     ref={titleInputRef}
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
-                    className="h-6 py-0 px-1 text-sm font-medium flex-grow bg-transparent border-transparent focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:opacity-75"
+                    className="h-6 py-0 px-1 text-sm font-medium grow bg-transparent border-transparent focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:opacity-75"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleSaveTitle();
                       if (e.key === 'Escape') handleCancelEditTitle();
@@ -471,7 +471,7 @@ export function AlwaysVisibleArtifact({
             </div>
           )}
         </div>
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           {documents && documents.length > 0 && (
             <DocumentActions
               content={editorContent}

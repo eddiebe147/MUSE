@@ -86,9 +86,13 @@ async function handleInlineSuggestionRequest(
 export async function POST(request: NextRequest) {
   try {
     const sessionCookie = getSessionCookie(request);
-    if (!sessionCookie) {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    // Allow access in development mode for testing, but require auth in production
+    if (!sessionCookie && !isDevelopment) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
     const { contextBefore = '', contextAfter = '', fullContent = '', aiOptions = {} } = await request.json();
     const { suggestionLength, customInstructions, writingStyleSummary, applyStyle } = aiOptions;
 

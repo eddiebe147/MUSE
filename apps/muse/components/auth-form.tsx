@@ -79,7 +79,7 @@ export function AuthForm({
                 onClick={() => onSocialLogin('google')}
                 disabled={isLoading}
               >
-                {isSocialLoading === 'google' ? (<span className="mr-2 h-4 w-4"><LoaderIcon size={16} /></span>) : (<span className="mr-2 h-4 w-4"><LogoGoogle size={16} /></span>)} Google
+                {isSocialLoading === 'google' ? (<span className="mr-2 size-4"><LoaderIcon size={16} /></span>) : (<span className="mr-2 size-4"><LogoGoogle size={16} /></span>)} Google
               </Button>
             )}
             {githubEnabled && (
@@ -90,7 +90,7 @@ export function AuthForm({
                 onClick={() => onSocialLogin('github')}
                 disabled={isLoading}
               >
-                {isSocialLoading === 'github' ? (<span className="mr-2 h-4 w-4"><LoaderIcon size={16} /></span>) : (<span className="mr-2 h-4 w-4"><GitIcon /></span>)} GitHub
+                {isSocialLoading === 'github' ? (<span className="mr-2 size-4"><LoaderIcon size={16} /></span>) : (<span className="mr-2 size-4"><GitIcon /></span>)} GitHub
               </Button>
             )}
           </div>

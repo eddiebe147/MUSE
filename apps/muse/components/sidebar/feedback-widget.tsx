@@ -96,7 +96,7 @@ export function FeedbackWidget({ className }: { className?: string }) {
       <SidebarMenuItem>
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton className="group data-[state=open]: border border-r text-accent-foreground data-[state=open]:text-sidebar-accent-foreground h-10 hover:bg-accent/50 transition-colors duration-200">
+            <SidebarMenuButton className="group data-[state=open]: border text-accent-foreground data-[state=open]:text-sidebar-accent-foreground h-10 hover:bg-accent/50 transition-colors duration-200">
               <span className="group-hover:text-primary transition-colors duration-200">Feedback</span>
               <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <Heart className="size-3 text-primary" />
@@ -166,7 +166,7 @@ export function FeedbackWidget({ className }: { className?: string }) {
                         </ul>
                       </motion.div>
                       <textarea
-                        className="text-foreground h-full w-full resize-none bg-transparent px-4 py-3.5 text-sm outline-hidden focus:ring-0 focus:outline-none"
+                        className="text-foreground size-full resize-none bg-transparent px-4 py-3.5 text-sm outline-hidden focus:ring-0 focus:outline-none"
                         autoFocus
                         onChange={(e) => setFeedback(e.target.value)}
                         disabled={status === "submitting"}
@@ -182,7 +182,7 @@ export function FeedbackWidget({ className }: { className?: string }) {
                         onClick={closeMenu}
                         aria-label="Close popover"
                         disabled={status === "submitting"}
-                        className="h-8 w-8 p-0 rounded-full hover:bg-muted"
+                        className="size-8 p-0 rounded-full hover:bg-muted"
                       >
                         <X className="size-4" />
                       </Button>

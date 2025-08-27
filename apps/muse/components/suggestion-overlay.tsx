@@ -472,16 +472,18 @@ export default function SuggestionOverlay({
             )}
 
             {/* Input field */}
-            <div>
+            <div className="relative">
               <input
                 ref={inputRef}
                 type="text"
-                placeholder={
+                className={`w-full p-2 rounded-md border border-input text-sm bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring ${
+                  inputValue.length === 0 ? 'is-floating-placeholder-empty' : ''
+                }`}
+                data-placeholder={
                   selectedText
                     ? "Describe what changes you'd like to make..."
                     : "Select text first..."
                 }
-                className="w-full p-2 rounded-md border border-input text-sm bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => {
@@ -491,6 +493,29 @@ export default function SuggestionOverlay({
                 }}
                 disabled={isGenerating || !selectedText}
               />
+              
+              <style jsx>{`
+                .is-floating-placeholder-empty::before {
+                  content: attr(data-placeholder);
+                  position: absolute;
+                  left: 8px;
+                  top: 8px;
+                  color: hsl(var(--muted-foreground));
+                  font-size: 0.875rem;
+                  pointer-events: none;
+                  user-select: none;
+                  transition: opacity 0.3s ease;
+                  opacity: 0.7;
+                }
+                
+                .is-floating-placeholder-empty:focus::before {
+                  opacity: 0.4;
+                }
+                
+                .is-floating-placeholder-empty::placeholder {
+                  opacity: 0;
+                }
+              `}</style>
             </div>
 
             {/* Error message */}
@@ -550,7 +575,7 @@ export default function SuggestionOverlay({
                 {isGenerating && (
                   <div className="flex justify-center items-center p-2 border-t bg-background/50">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Loader2 className="h-3 w-3 animate-spin" />
+                      <Loader2 className="size-3 animate-spin" />
                       <span>Generating suggestion...</span>
                     </div>
                   </div>

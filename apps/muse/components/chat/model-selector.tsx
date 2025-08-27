@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import useSWR from 'swr';
-import { fetcher } from '@/lib/utils';
+import { fetcher , cn } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
-import { CheckIcon } from '../icons';
+import { CheckIcon , CheckCircleFillIcon, ChevronDownIcon } from '../icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,9 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { chatModels } from '@/lib/ai/models';
-import { cn } from '@/lib/utils';
 
-import { CheckCircleFillIcon, ChevronDownIcon } from '../icons';
 import {
   Select,
   SelectContent,
