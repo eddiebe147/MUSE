@@ -144,6 +144,25 @@ export function Phase4AIInterface({
     setIsConfigModalOpen(false);
   }, [newTemplate, customTemplates]);
 
+  const handleCompletePhase = useCallback(() => {
+    if (generatedScript) {
+      // Create script object with all necessary data for canvas export
+      const scriptData = {
+        content: generatedScript,
+        format: selectedFormat,
+        metadata: scriptMetadata,
+        phase1Summary,
+        scenes,
+        sceneBeats,
+        title: scriptMetadata?.title || 'Generated Script',
+        timestamp: new Date().toISOString()
+      };
+      
+      // Call the onComplete callback to export to canvas
+      onComplete(scriptData);
+    }
+  }, [generatedScript, selectedFormat, scriptMetadata, phase1Summary, scenes, sceneBeats, onComplete]);
+
   const loadCustomTemplates = useCallback(() => {
     try {
       const saved = localStorage.getItem('muse_custom_format_templates');
@@ -269,16 +288,6 @@ export function Phase4AIInterface({
       format: selectedFormat,
       metadata: scriptMetadata 
     });
-  };
-
-  const handleCompletePhase = () => {
-    if (generatedScript) {
-      onComplete({
-        content: generatedScript,
-        format: selectedFormat,
-        metadata: scriptMetadata
-      });
-    }
   };
 
   return (

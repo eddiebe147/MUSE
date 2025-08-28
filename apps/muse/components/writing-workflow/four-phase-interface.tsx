@@ -212,7 +212,8 @@ export function FourPhaseInterface({
   
   
   // Track whether we've started the workflow - hydration-safe approach
-  const [hasStarted, setHasStarted] = useState(Boolean(initialData?.phase1 || initialData?.transcriptAnalysis));
+  // ALWAYS START IMMEDIATELY - No intermediate panel
+  const [hasStarted, setHasStarted] = useState(true); // Changed from Boolean check to always true
   const [isHydrated, setIsHydrated] = useState(false);
   const [transcriptAnalysisData, setTranscriptAnalysisData] = useState<TranscriptAnalysis | null>(
     initialData?.transcriptAnalysis || null
@@ -222,19 +223,13 @@ export function FourPhaseInterface({
   useEffect(() => {
     setIsHydrated(true);
     
-    // Only check session storage after hydration
-    const wasStarted = sessionStorage.getItem(`project_${projectId}_started`);
+    // SIMPLIFIED: Since we bypass StoryCreationStart, we can still check for saved transcript data
     const storedTranscriptData = sessionStorage.getItem(`project_${projectId}_transcript`);
-    
-    if (wasStarted) {
-      setHasStarted(true);
-    }
     
     if (storedTranscriptData && !transcriptAnalysisData) {
       try {
         const parsedData = JSON.parse(storedTranscriptData);
         setTranscriptAnalysisData(parsedData);
-        setHasStarted(true);
       } catch {
         // Invalid data, ignore
       }
@@ -660,19 +655,51 @@ export function FourPhaseInterface({
     }
   };
 
-  // Show starting interface if workflow hasn't started
-  if (!hasStarted) {
-    return (
-      <StoryCreationStart
-        onStartWithTranscript={handleStartWithTranscript}
-        onStartBlank={handleStartBlank}
-        className={className}
-      />
-    );
-  }
+  // REMOVED: Intermediate panel - Now goes directly to workflow
+  // The StoryCreationStart panel has been bypassed for seamless navigation
+  // if (!hasStarted) {
+  //   return (
+  //     <StoryCreationStart
+  //       onStartWithTranscript={handleStartWithTranscript}
+  //       onStartBlank={handleStartBlank}
+  //       className={className}
+  //     />
+  //   );
+  // }
 
   return (
-    <div className={cn("min-h-screen bg-background relative flex", className)}>
+    <div className={cn("min-h-screen bg-background relative flex flex-col", className)}>
+      {/* Mode Navigation Bar - Direct switching between ARC and Canvas */}
+      <div className="h-14 border-b border-border bg-background/95 backdrop-blur flex items-center justify-between px-6 sticky top-0 z-50">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-purple-600 font-medium"
+            disabled={true} // Already in ARC/Workflow mode
+          >
+            <Brain className="size-4 mr-2" />
+            ARC Mode
+          </Button>
+          <div className="w-px h-6 bg-border" />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onExitWorkflow}
+            className="hover:text-orange-600"
+          >
+            <PenTool className="size-4 mr-2" />
+            Canvas Mode
+          </Button>
+        </div>
+        
+        <div className="text-sm text-muted-foreground">
+          Phase {currentPhase + 1} of {WRITING_PHASES.length}
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex relative">
       {/* Unified Knowledge Base Sidebar */}
       <ResizableSidebar
         defaultWidth={320}
@@ -1312,6 +1339,7 @@ export function FourPhaseInterface({
           }
         }}
       />
+      </div> {/* Close Main Content Area flex div */}
     </div>
   );
 }

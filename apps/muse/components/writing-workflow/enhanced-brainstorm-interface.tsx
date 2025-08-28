@@ -114,7 +114,7 @@ const EXPLORATION_METHODS: ExplorationPrompt[] = [
   {
     method: 'character-analysis',
     title: 'Character Deep Dive',
-    description: 'Explore character motivations, arcs, and relationships',
+    description: 'Explore character motivations, arcs, and relationships in depth',
     icon: <Users className="size-4" />,
     color: 'bg-blue-50 border-blue-200 text-blue-700',
     prompts: [
@@ -126,7 +126,7 @@ const EXPLORATION_METHODS: ExplorationPrompt[] = [
   {
     method: 'conflict-mapping',
     title: 'Conflict Architecture',
-    description: 'Map internal and external conflicts for maximum drama',
+    description: 'Map internal and external conflicts for maximum dramatic impact',
     icon: <Swords className="size-4" />,
     color: 'bg-red-50 border-red-200 text-red-700',
     prompts: [
@@ -138,7 +138,7 @@ const EXPLORATION_METHODS: ExplorationPrompt[] = [
   {
     method: 'theme-discovery',
     title: 'Theme Exploration',
-    description: 'Uncover deeper meanings and universal themes',
+    description: 'Uncover deeper meanings and universal themes naturally embedded',
     icon: <Heart className="size-4" />,
     color: 'bg-orange-50 border-orange-200 text-orange-700',
     prompts: [
@@ -150,7 +150,7 @@ const EXPLORATION_METHODS: ExplorationPrompt[] = [
   {
     method: 'structure-analysis',
     title: 'Story Structure',
-    description: 'Analyze pacing, acts, and narrative architecture',
+    description: 'Analyze pacing, acts, and narrative architecture for flow',
     icon: <Map className="size-4" />,
     color: 'bg-orange-50 border-orange-200 text-orange-700',
     prompts: [
@@ -162,7 +162,7 @@ const EXPLORATION_METHODS: ExplorationPrompt[] = [
   {
     method: 'genre-exploration',
     title: 'Genre Possibilities',
-    description: 'Explore different genre approaches and conventions',
+    description: 'Explore different genre approaches and creative conventions',
     icon: <Palette className="size-4" />,
     color: 'bg-indigo-50 border-indigo-200 text-indigo-700',
     prompts: [
@@ -593,7 +593,7 @@ export function EnhancedBrainstormInterface({
                 Exploration Methods
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-1 pt-0">
+            <CardContent className="space-y-2 pt-0 overflow-hidden">
               {EXPLORATION_METHODS.map((method) => {
                 const isExpanded = expandedMethod === method.method;
                 const isUsed = usedMethods.has(method.method);
@@ -603,74 +603,101 @@ export function EnhancedBrainstormInterface({
                   <div 
                     key={method.method}
                     className={cn(
-                      "transition-all rounded-lg border",
+                      "transition-all rounded-lg border overflow-hidden relative w-full",
                       isActive && "ring-2 ring-primary ring-offset-1",
                       isUsed && !isActive && "border-green-500/30 bg-green-50/30 dark:bg-green-900/10"
                     )}
                   >
-                    {/* Compact header - always visible */}
-                    <button
-                      onClick={() => setExpandedMethod(isExpanded ? null : method.method)}
-                      className={cn(
-                        "w-full flex items-center justify-between p-2 hover:bg-muted/50 rounded-t-lg transition-colors",
-                        isExpanded && "bg-muted/30"
-                      )}
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className={cn(
-                          "shrink-0 transition-transform",
-                          isExpanded && "rotate-90"
-                        )}>
-                          <ChevronRight className="size-3 text-muted-foreground" />
-                        </div>
-                        {method.icon}
-                        <span className="font-medium text-sm">{method.title}</span>
-                        {isUsed && (
-                          <div className="size-1.5 rounded-full bg-green-500" title="Method used" />
+                    {/* Fixed streamlined layout */}
+                    <div className="flex items-start gap-2 p-3 w-full">
+                      {/* Primary action - Method name as button */}
+                      <Button
+                        onClick={() => {
+                          const primaryPrompt = method.prompts[0] || `Let's use ${method.title} methodology to explore my story elements.`;
+                          handleSendMessage(primaryPrompt, method.method);
+                        }}
+                        variant={isActive ? "default" : "ghost"}
+                        size="sm"
+                        className={cn(
+                          "flex-1 justify-start h-auto py-2 px-3 min-h-[48px] max-w-full overflow-hidden",
+                          !isActive && "hover:bg-muted/70"
                         )}
-                        {isActive && (
-                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-                            Active
-                          </Badge>
-                        )}
-                      </div>
-                      <span className="text-[10px] text-muted-foreground pr-2">{method.description}</span>
-                    </button>
-                    
-                    {/* Expandable content */}
-                    {isExpanded && (
-                      <div className="px-3 pb-2 space-y-1 animate-in slide-in-from-top-1 duration-200">
-                        <div className="pl-5 space-y-1">
-                          {method.prompts.map((prompt, index) => (
-                            <Button
-                              key={index}
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                handleSendMessage(prompt, method.method);
-                                setExpandedMethod(null);
+                        disabled={isGenerating}
+                      >
+                        <div className="text-left w-full min-w-0 flex-1">
+                          <div className="font-medium text-sm flex items-center gap-2 flex-wrap">
+                            <span className="truncate">{method.title}</span>
+                            {isUsed && (
+                              <div className="size-1.5 rounded-full bg-green-500 shrink-0" title="Method used" />
+                            )}
+                            {isActive && (
+                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 shrink-0">
+                                Active
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1 overflow-hidden">
+                            <div 
+                              className="leading-4"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
                               }}
-                              className="h-auto p-1.5 text-xs text-left whitespace-normal justify-start w-full hover:bg-primary/10"
-                              disabled={isGenerating}
                             >
-                              <span className="text-muted-foreground mr-2 font-normal">•</span>
-                              {prompt}
-                            </Button>
-                          ))}
-                          
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              handleSendMessage(`Let's use ${method.title} methodology to explore my story elements.`, method.method);
-                              setExpandedMethod(null);
-                            }}
-                            className="w-full text-xs h-7 mt-1"
-                            disabled={isGenerating}
-                          >
-                            <Sparkles className="size-3 mr-1" />
-                            Quick Start {method.title}
-                          </Button>
+                              {method.description}
+                            </div>
+                          </div>
+                        </div>
+                      </Button>
+                      
+                      {/* Info/expand button - fixed positioning */}
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedMethod(isExpanded ? null : method.method);
+                        }}
+                        variant="ghost"
+                        size="sm"
+                        className="w-8 h-8 p-0 shrink-0 hover:bg-muted/50 flex items-center justify-center"
+                        title="View detailed options"
+                      >
+                        <ChevronRight className={cn(
+                          "w-4 h-4 text-muted-foreground transition-transform",
+                          isExpanded && "rotate-90"
+                        )} />
+                      </Button>
+                    </div>
+                    
+                    {/* Expandable detailed options - Fixed positioning */}
+                    {isExpanded && (
+                      <div className="border-t bg-muted/20 animate-in slide-in-from-top-1 duration-200">
+                        <div className="px-4 py-3 space-y-2">
+                          <div className="text-xs font-medium text-muted-foreground">
+                            Alternative prompts:
+                          </div>
+                          <div className="space-y-1 max-w-full">
+                            {method.prompts.slice(1).map((prompt, index) => (
+                              <Button
+                                key={index}
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  handleSendMessage(prompt, method.method);
+                                  setExpandedMethod(null);
+                                }}
+                                className="h-auto p-2 text-xs text-left justify-start w-full hover:bg-primary/10 whitespace-normal"
+                                disabled={isGenerating}
+                              >
+                                <span className="text-muted-foreground mr-2 shrink-0">•</span>
+                                <span className="flex-1 min-w-0 text-left leading-relaxed">
+                                  {prompt}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -681,7 +708,7 @@ export function EnhancedBrainstormInterface({
               {/* Subtle tip at bottom */}
               <p className="text-[10px] text-muted-foreground pt-2 pl-2">
                 <RefreshCw className="size-3 inline mr-1" />
-                All methods reusable • Combine approaches freely
+                Click method name to use • Arrow for more options • All methods reusable
               </p>
             </CardContent>
           </Card>

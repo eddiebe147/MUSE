@@ -1,5 +1,5 @@
 'use client';
-import { ChevronUp, Loader2 } from 'lucide-react';
+import { ChevronUp, Loader2, Settings, User, CreditCard } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Paywall } from '@/components/paywall';
+import Link from 'next/link';
 
 type Subscription = {
   id: string;
@@ -224,14 +225,37 @@ export function SidebarUserNav({ user }: { user: User | null }) {
                   <DropdownMenuSeparator />
                 </>
               )}
+              
+              <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                Account
+              </DropdownMenuLabel>
+              
+              <DropdownMenuItem asChild disabled={isLoading}>
+                <Link href="/profile" className="cursor-pointer">
+                  <User className="mr-2 size-4" />
+                  Profile Settings
+                </Link>
+              </DropdownMenuItem>
+              
+              {isStripeEnabled && (
+                <DropdownMenuItem asChild disabled={isLoading}>
+                  <Link href="/profile/billing" className="cursor-pointer">
+                    <CreditCard className="mr-2 size-4" />
+                    Billing & Plans
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              
+              <DropdownMenuSeparator />
+              
               <DropdownMenuItem
                 className="cursor-pointer"
                 onSelect={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 disabled={isLoading}
               >
+                <Settings className="mr-2 size-4" />
                 {`Toggle ${theme === 'light' ? 'dark' : 'light'} mode`}
               </DropdownMenuItem>
-              {!isStripeEnabled && <DropdownMenuSeparator />}
 
               <DropdownMenuItem
                 className="cursor-pointer"

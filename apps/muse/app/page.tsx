@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { CardHeader, Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GripVertical, X, Check } from 'lucide-react';
+import { GripVertical, X, Check, User } from 'lucide-react';
 import Image from 'next/image';
 import { motion, useInView } from "framer-motion";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
@@ -100,17 +100,31 @@ export default function Home() {
           <h1 className="text-xl font-normal tracking-tighter text-foreground/90">
             MUSE
           </h1>
-          <Button
-            variant="outline"
-            size="sm"
-            className="rounded-full group flex items-center"
-            onClick={handleBeginClick}
-          >
-            {hasSession ? "Open" : "Begin"}
-            <span className="inline-block ml-2 text-xs transition-transform group-hover:translate-x-0.5">
-              ›
-            </span>
-          </Button>
+          <div className="flex items-center gap-3">
+            {hasSession && (
+              <Link href="/profile">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full h-8 w-8 p-0"
+                  title="Profile & Settings"
+                >
+                  <User className="size-4" />
+                </Button>
+              </Link>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full group flex items-center"
+              onClick={handleBeginClick}
+            >
+              {hasSession ? "Open" : "Try Now"}
+              <span className="inline-block ml-2 text-xs transition-transform group-hover:translate-x-0.5">
+                ›
+              </span>
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -123,7 +137,7 @@ export default function Home() {
               <h2
                 className={`text-6xl md:text-[128px] ${crimson.className} tracking-[-0.08em] leading-none text-foreground`}
               >
-                Understand, Analyze
+                Professional Story
               </h2>
             </div>
 
@@ -131,17 +145,23 @@ export default function Home() {
               <h3
                 className={`text-6xl md:text-[128px] ${crimson.className} tracking-[-0.06em] leading-none text-foreground `}
               >
-                Stories
+                Development
                 <span className="animate-blink ml-0.5 font-normal">|</span>
               </h3>
             </div>
           </div>
 
           {/* Tagline */}
-          <p className="text-xl text-muted-foreground mt-4 max-w-md text-balance mx-auto font-light">
-            The Story Engine That Understands Stories.
-            Analyze narratives, track characters, and unlock story intelligence.
+          <p className="text-xl text-muted-foreground mt-4 max-w-2xl text-balance mx-auto font-light">
+            The collaborative AI platform for professional screenwriters. 
+            From brainstorming to final draft—experience the full MUSE workflow before you sign up.
           </p>
+          
+          {/* Try Before You Buy Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 mt-3 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+            <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Try Before You Sign Up</span>
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex gap-2 mt-6 justify-center">
@@ -151,7 +171,7 @@ export default function Home() {
               className="rounded-full"
               onClick={handleBeginClick}
             >
-              {hasSession ? "Open" : "Begin"}{" "}
+              {hasSession ? "Open MUSE" : "Try MUSE Free"}{" "}
               <span className="inline-block ml-2 text-xs transition-transform group-hover:translate-x-0.5">
                 ›
               </span>
@@ -198,14 +218,14 @@ export default function Home() {
         <div className="container mx-auto px-6 md:px-8 lg:px-12">
           <div className="text-center mb-16">
             <h2 id="features-heading" className={`text-4xl md:text-5xl font-medium ${crimson.className} tracking-tight text-foreground`}>
-              Story Intelligence Features
+              Professional Story Development Platform
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-              Discover how MUSE transforms your storytelling with intelligent analysis and insights.
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              From collaborative brainstorming to industry-ready scripts. Experience the complete MUSE workflow powered by Claude AI.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1: Inline Suggestion Demo */}
+            {/* Card 1: ARC Generator Intelligence */}
             <motion.div
               ref={card1Ref}
               initial={{ opacity: 0, y: 20 }}
@@ -215,21 +235,31 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
-                  Story Structure Analysis
+                  ARC Generator Intelligence
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground grow">
-                  <p className="demo-prose-mirror-style">
-                    <span className="demo-text-base">You start typing, and the AI offers</span>
-                    <span className="inline-suggestion-wrapper">
-                      <span className="demo-inline-suggestion-animated" data-suggestion=" a helpful completion."></span>
-                      <kbd className="inline-tab-icon">Tab</kbd>
-                    </span>
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-medium text-blue-600 dark:text-blue-400">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                      Tree of Thought Exploration
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-medium text-purple-600 dark:text-purple-400">
+                      <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                      Character Deep Dives
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-medium text-green-600 dark:text-green-400">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      Collaborative Chat with Claude
+                    </div>
+                  </div>
+                  <p className="text-center w-full mt-4 text-sm">
+                    Advanced brainstorming methods powered by Claude AI for deep story exploration.
                   </p>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Card 2: Suggestion Overlay Demo */}
+            {/* Card 2: 4-Phase Professional Workflow */}
             <motion.div
               ref={card2Ref}
               initial={{ opacity: 0, y: 20 }}
@@ -239,37 +269,35 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
-                  Character Development Tracking
+                  4-Phase Professional Workflow
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground grow relative overflow-visible">
-                  <p className="demo-prose-mirror-style">
-                    <span className="demo-text-base">This phrasing <span className="demo-selected-text-animated">is a bit weak and verbose.</span> Let&apos;s ask the AI to improve it.</span>
-                  </p>
-                  <div className="demo-suggestion-overlay-animated border border-border">
-                    <div className="demo-overlay-header">
-                      <GripVertical size={14} className="text-muted-foreground/70 demo-overlay-drag-handle" />
-                      <h3 className="text-xs font-medium">Suggestion</h3>
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-400">1</div>
+                      <span className="text-xs">Brainstorming & Analysis</span>
                     </div>
-                    <div className="demo-overlay-input-placeholder">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-400">2</div>
+                      <span className="text-xs">Scene Summary Generation</span>
                     </div>
-                    <div className="demo-overlay-diff-view">
-                      <span className="text-red-500 line-through dark:text-red-400/70">is a bit weak and verbose.</span>
-                      <span className="text-green-600 dark:text-green-400/70 ml-1 demo-diff-new-text-animated">lacks punch and impact.</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-400">3</div>
+                      <span className="text-xs">Detailed Scene Development</span>
                     </div>
-                    <div className="demo-overlay-actions">
-                      <Button variant="ghost" size="sm" className="h-7 px-2 py-1 text-xs hover:text-destructive rounded-full">
-                         <X size={13} strokeWidth={2.5} className="mr-1" /> Reject
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-7 px-2 py-1 text-xs hover:text-primary rounded-full">
-                         <Check size={13} strokeWidth={2.5} className="mr-1" /> Accept
-                      </Button>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-xs font-bold text-orange-600 dark:text-orange-400">4</div>
+                      <span className="text-xs">Professional Script Formatting</span>
                     </div>
                   </div>
+                  <p className="text-center w-full mt-4 text-sm">
+                    Structured workflow from concept to industry-ready script with custom templates.
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Card 3: Smart Synonyms Demo */}
+            {/* Card 3: Two-Tier Knowledge Base */}
             <motion.div
               ref={card3Ref}
               initial={{ opacity: 0, y: 20 }}
@@ -279,26 +307,35 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
-                  Instant Synonym Finder
+                  Two-Tier Knowledge Base
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground grow">
-                  <p className="demo-prose-mirror-style relative">
-                    <span className="demo-text-base">Find better words with ease. The AI presents contextually</span>
-                    <span className="demo-synonym-word-animated" data-word="relevant">
-                      relevant
-                       <span className="demo-synonym-menu-animated">
-                          <span>apt</span>
-                          <span>pertinent</span>
-                          <span>fitting</span>
-                        </span>
-                    </span>
-                    <span className="demo-text-base"> synonyms.</span>
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="border border-border rounded-lg p-3 bg-blue-50/50 dark:bg-blue-900/10">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-3 h-3 rounded bg-blue-500"></div>
+                        <span className="text-xs font-medium text-blue-700 dark:text-blue-300">Global Guidelines</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Universal standards for all projects</p>
+                    </div>
+                    
+                    <div className="border border-border rounded-lg p-3 bg-green-50/50 dark:bg-green-900/10">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-3 h-3 rounded bg-green-500"></div>
+                        <span className="text-xs font-medium text-green-700 dark:text-green-300">Story-Specific Files</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Custom guidelines for individual projects</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-center w-full mt-4 text-sm">
+                    Intelligent context management with Active Guidelines integration.
                   </p>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Card 4: AI Writing That Sounds Like You */}
+            {/* Card 4: Dual Workspace Experience */}
             <motion.div
               ref={card4Ref}
               initial={{ opacity: 0, y: 20 }}
@@ -308,18 +345,35 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl overflow-visible">
                 <CardHeader className="p-6 text-base font-medium">
-                  AI Writing That Sounds Like You
+                  Dual Workspace Experience
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between items-center">
-                  <div className="w-full flex flex-col items-center grow justify-center">
-                    <StyleToggleDemo inView={card4InView} />
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="border border-border rounded-lg p-3 bg-purple-50/50 dark:bg-purple-900/10">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                        <span className="text-xs font-medium text-purple-700 dark:text-purple-300">ARC Mode</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Collaborative generation with Claude AI</p>
+                    </div>
+                    
+                    <div className="border border-border rounded-lg p-3 bg-orange-50/50 dark:bg-orange-900/10">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                        <span className="text-xs font-medium text-orange-700 dark:text-orange-300">Canvas Mode</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Professional script refinement</p>
+                    </div>
                   </div>
-                  <p className="text-center w-full mt-8">Trained on your writing to apply your unique style.</p>
+                  
+                  <p className="text-center w-full mt-4 text-sm">
+                    Seamless workflow between collaborative brainstorming and professional writing.
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Card 5: Access Premium Models */}
+            {/* Card 5: Professional Export & Customization */}
             <motion.div
               ref={card5Ref}
               initial={{ opacity: 0, y: 20 }}
@@ -329,39 +383,35 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl">
                 <CardHeader className="p-6 text-base font-medium">
-                  Access Premium Models
+                  Professional Export & Customization
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between items-center">
-                  <div className="w-full flex items-center justify-center gap-0" style={{ height: '112px' }}>
-                    {modelNames.map((name, i) => {
-                      const mid = (modelNames.length - 1) / 2;
-                      const offset = i - mid;
-                      const rot = offset * 8;
-                      const y = Math.abs(offset) * 8;
-                      return (
-                        <motion.div
-                          key={name}
-                          initial={{ opacity: 0, rotate: 0, y: 0 }}
-                          animate={card5InView ? { opacity: 1, rotate: rot, y, transition: { delay: 0.2 + i * 0.1, type: 'spring', stiffness: 140, damping: 15 } } : {}}
-                          className="w-20 h-28 bg-background border border-border rounded-lg flex items-center justify-center mx-[-4px] shadow-sm relative"
-                          style={{ zIndex: 10 - Math.abs(offset) }}
-                        >
-                          {i === proIndex && (
-                            <span className="absolute top-1 right-1 bg-accent text-accent-foreground text-[10px] px-1 rounded">Pro</span>
-                          )}
-                          <span className="text-xs font-medium">{name}</span>
-                        </motion.div>
-                      );
-                    })}
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                      <span className="text-xs">Network-ready formatting</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-gradient-to-r from-green-500 to-blue-500"></div>
+                      <span className="text-xs">Custom style templates</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-gradient-to-r from-orange-500 to-red-500"></div>
+                      <span className="text-xs">Multiple export formats</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                      <span className="text-xs">Industry submission ready</span>
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground text-center w-full mt-8">
-                    Unlimited, free access to the best AI models.
+                  <p className="text-sm text-muted-foreground text-center w-full mt-4">
+                    Professional formatting and export options for industry standards.
                   </p>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Card 6: One-Click Publish & Share */}
+            {/* Card 6: Try-Before-You-Buy Model */}
             <motion.div
               ref={card6Ref}
               initial={{ opacity: 0, y: 20 }}
@@ -371,30 +421,37 @@ export default function Home() {
             >
               <Card className="h-full flex flex-col min-h-[320px] rounded-xl">
                 <CardHeader className="p-6 text-base font-medium">
-                  One-Click Publish & Share
+                  Try-Before-You-Buy Model
                 </CardHeader>
-                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between items-center">
-                  <div className="w-full flex flex-col items-center">
-                    {/* Mini page preview */}
-                    <div className="relative w-44 h-32 rounded-lg border border-border bg-background shadow-sm overflow-hidden">
-                      {/* URL bar */}
-                      <div className="h-5 bg-muted flex items-center px-2 text-[9px] text-muted-foreground/90 font-mono gap-1">
-                        <span className="truncate">you/your-post</span>
+                <CardContent className="p-6 text-sm text-muted-foreground grow flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="text-center space-y-3">
+                      <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span className="text-xs font-medium text-green-700 dark:text-green-300">FREE</span>
                       </div>
-                       {/* Content preview */}
-                      <div className="p-3 space-y-1">
-                        <div className="h-2.5 bg-muted rounded w-2/3" />
-                        <div className="h-2.5 bg-muted rounded w-full" />
-                        <div className="h-2.5 bg-muted rounded w-5/6" />
+                      <p className="text-xs">Story Starter - Full access to try</p>
+                    </div>
+                    
+                    <div className="text-center space-y-3">
+                      <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+                        <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                        <span className="text-xs font-medium text-orange-700 dark:text-orange-300">$19/mo</span>
                       </div>
-                      {/* Chat bubble */}
-                      <div className="absolute bottom-2 right-2 w-8 h-4 rounded-full bg-primary flex items-center justify-center text-[6px] text-primary-foreground shadow">
-                        Ask Leo
+                      <p className="text-xs">Story Master - Enhanced features</p>
+                    </div>
+                    
+                    <div className="text-center space-y-3">
+                      <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+                        <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                        <span className="text-xs font-medium text-purple-700 dark:text-purple-300">$39/mo</span>
                       </div>
+                      <p className="text-xs">Story Studio - Team collaboration</p>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground text-center w-full mt-8">
-                    Publish in one click & share with AI chat support.
+                  
+                  <p className="text-sm text-muted-foreground text-center w-full mt-4">
+                    Experience the full platform before upgrading. No credit card required.
                   </p>
                 </CardContent>
               </Card>
@@ -408,8 +465,11 @@ export default function Home() {
         <div className="container mx-auto px-6 md:px-8 lg:px-12">
           <div className="text-center mb-14">
             <h2 className={`text-4xl md:text-5xl font-medium ${crimson.className} tracking-tight text-foreground`}>
-              Loved by many
+              Trusted by Creative Professionals
             </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Powered by Claude AI for industry-standard story development
+            </p>
           </div>
           
           <TooltipProvider>
@@ -494,9 +554,9 @@ export default function Home() {
               className="rounded-full px-8 py-3"
               onClick={handleBeginClick}
             >
-              {hasSession ? "Open MUSE" : "Get Started"}
+              {hasSession ? "Open MUSE" : "Start Writing Now"}
             </Button>
-            <p className="mt-2 text-xs text-muted-foreground">No credit card required</p>
+            <p className="mt-2 text-xs text-muted-foreground">Try the full platform - No credit card required</p>
           </div>
         </div>
       </section>

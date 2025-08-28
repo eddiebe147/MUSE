@@ -15,7 +15,9 @@ import {
   X,
   Plus,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Globe,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,12 +32,14 @@ interface KnowledgeFile {
   updatedAt: Date;
   starred: boolean;
   preview?: string;
+  tier: 'global' | 'story';
+  projectId?: string;
 }
 
 interface KnowledgeBaseEditorProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (file: Omit<KnowledgeFile, 'id' | 'createdAt' | 'updatedAt' | 'size'>) => void;
+  onSave: (file: Omit<KnowledgeFile, 'id' | 'createdAt' | 'updatedAt' | 'size'>, tier: 'global' | 'story') => void;
   initialData?: Partial<KnowledgeFile>;
 }
 
@@ -58,16 +62,27 @@ export function KnowledgeBaseEditor({
   const [content, setContent] = useState(initialData?.content || '');
   const [type, setType] = useState<KnowledgeFile['type']>(initialData?.type || 'note');
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
+  const [tier, setTier] = useState<'global' | 'story'>(initialData?.tier || 'story');
   const [newTag, setNewTag] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddTag = () => {
-    if (newTag.trim() && !tags.includes(newTag.trim())) {
-      setTags([...tags, newTag.trim()]);
-      setNewTag('');
+    const sanitizedTag = newTag.trim().toLowerCase().replace(/[^\w\s-]/g, '').substring(0, 20);
+    
+    // Validate tag
+    if (!sanitizedTag) return;
+    if (sanitizedTag.length < 2) return;
+    if (tags.length >= 10) {
+      setError('Maximum 10 tags allowed');
+      return;
     }
+    if (tags.includes(sanitizedTag)) return;
+    
+    setTags([...tags, sanitizedTag]);
+    setNewTag('');
+    setError(null);
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -78,12 +93,40 @@ export function KnowledgeBaseEditor({
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Security: File size validation (max 10MB)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_FILE_SIZE) {
+      setError('File size too large. Maximum size is 10MB.');
+      return;
+    }
+
+    // Security: File type validation
+    const allowedTypes = ['text/plain', 'text/markdown', 'application/pdf'];
+    const allowedExtensions = ['.txt', '.md', '.doc', '.docx', '.pdf'];
+    const hasValidExtension = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    
+    if (!hasValidExtension && !allowedTypes.includes(file.type)) {
+      setError('Invalid file type. Only text files, documents, and PDFs are allowed.');
+      return;
+    }
+
     setIsUploading(true);
     setError(null);
 
     try {
       const fileContent = await file.text();
-      setName(name || file.name);
+      
+      // Security: Content length validation
+      if (fileContent.length > 1000000) { // 1MB text limit
+        setError('File content too large. Please use a smaller file.');
+        setIsUploading(false);
+        return;
+      }
+      
+      // Sanitize filename
+      const sanitizedName = file.name.replace(/[<>:"/\\|?*]/g, '_').substring(0, 100);
+      
+      setName(name || sanitizedName);
       setContent(fileContent);
       
       // Auto-detect type based on filename
@@ -101,26 +144,43 @@ export function KnowledgeBaseEditor({
   };
 
   const handleSave = () => {
-    if (!name.trim()) {
+    // Input validation and sanitization
+    const sanitizedName = name.trim().substring(0, 200); // Limit name length
+    const sanitizedContent = content.trim().substring(0, 1000000); // Limit content length (1MB)
+    
+    if (!sanitizedName) {
       setError('Please enter a name for this entry');
       return;
     }
 
-    if (!content.trim()) {
+    if (!sanitizedContent) {
       setError('Please enter some content or upload a file');
       return;
     }
 
+    // Additional validation
+    if (sanitizedName.length < 2) {
+      setError('Name must be at least 2 characters long');
+      return;
+    }
+
+    if (sanitizedContent.length < 10) {
+      setError('Content must be at least 10 characters long');
+      return;
+    }
+
     const fileData: Omit<KnowledgeFile, 'id' | 'createdAt' | 'updatedAt' | 'size'> = {
-      name: name.trim(),
+      name: sanitizedName,
       type,
-      content: content.trim(),
-      tags,
+      content: sanitizedContent,
+      tags: tags.filter(tag => tag.trim().length > 0).slice(0, 10), // Limit to 10 tags, filter empty
       starred: false,
-      preview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
+      preview: sanitizedContent.substring(0, 100) + (sanitizedContent.length > 100 ? '...' : ''),
+      tier,
+      projectId: tier === 'story' ? 'current-project' : undefined // Will be set by parent
     };
 
-    onSave(fileData);
+    onSave(fileData, tier);
     handleClose();
   };
 
@@ -129,27 +189,114 @@ export function KnowledgeBaseEditor({
     setContent('');
     setType('note');
     setTags([]);
+    setTier('story');
     setNewTag('');
     setError(null);
     onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose} aria-describedby="knowledge-editor-description">
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle id="knowledge-editor-title">
             {initialData ? 'Edit Knowledge Base Entry' : 'Add New Knowledge Base Entry'}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-              <AlertCircle className="size-4 text-red-600 mt-0.5" />
+            <div 
+              className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2" 
+              role="alert"
+              aria-live="polite"
+            >
+              <AlertCircle className="size-4 text-red-600 mt-0.5" aria-hidden="true" />
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
+
+          {/* Library Destination Selector */}
+          <div>
+            <Label className="text-base font-medium mb-3 block" id="library-destination-label">
+              Library Destination
+            </Label>
+            <div 
+              className="grid grid-cols-1 gap-2" 
+              role="radiogroup" 
+              aria-labelledby="library-destination-label"
+            >
+              <Button
+                type="button"
+                variant={tier === 'story' ? 'default' : 'outline'}
+                size="lg"
+                onClick={() => setTier('story')}
+                className="justify-start h-auto p-4 text-left"
+                role="radio"
+                aria-checked={tier === 'story'}
+                aria-describedby="story-library-description"
+              >
+                <div className="flex items-start gap-3 w-full">
+                  <BookOpen className={cn(
+                    "size-5 mt-1 shrink-0",
+                    tier === 'story' ? "text-white" : "text-green-600"
+                  )} />
+                  <div className="flex-1">
+                    <div className="font-medium">Story Library</div>
+                    <div 
+                      id="story-library-description"
+                      className={cn(
+                        "text-sm mt-1",
+                        tier === 'story' ? "text-white/80" : "text-muted-foreground"
+                      )}
+                    >
+                      Available only for this project • Characters, drafts, story-specific materials
+                    </div>
+                  </div>
+                  {tier === 'story' && (
+                    <div className="shrink-0">
+                      <CheckCircle className="size-4 text-white" />
+                    </div>
+                  )}
+                </div>
+              </Button>
+              
+              <Button
+                type="button"
+                variant={tier === 'global' ? 'default' : 'outline'}
+                size="lg"
+                onClick={() => setTier('global')}
+                className="justify-start h-auto p-4 text-left"
+                role="radio"
+                aria-checked={tier === 'global'}
+                aria-describedby="global-library-description"
+              >
+                <div className="flex items-start gap-3 w-full">
+                  <Globe className={cn(
+                    "size-5 mt-1 shrink-0",
+                    tier === 'global' ? "text-white" : "text-blue-600"
+                  )} />
+                  <div className="flex-1">
+                    <div className="font-medium">Global Guidelines</div>
+                    <div 
+                      id="global-library-description"
+                      className={cn(
+                        "text-sm mt-1",
+                        tier === 'global' ? "text-white/80" : "text-muted-foreground"
+                      )}
+                    >
+                      Available across all stories • Writing standards, network requirements
+                    </div>
+                  </div>
+                  {tier === 'global' && (
+                    <div className="shrink-0">
+                      <CheckCircle className="size-4 text-white" />
+                    </div>
+                  )}
+                </div>
+              </Button>
+            </div>
+          </div>
 
           <Tabs defaultValue="manual" className="w-full">
             <TabsList className="grid w-full grid-cols-2">

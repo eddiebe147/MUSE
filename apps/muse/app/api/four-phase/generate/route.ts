@@ -204,7 +204,7 @@ CRITICAL INSTRUCTION: Write the complete script from beginning to end. Include a
       system: systemPrompt,
       prompt: userPrompt,
       temperature: phase === 4 ? 0.7 : 0.8, // Slightly lower temperature for final script
-      maxTokens: phase === 4 ? 8000 : 1500, // Increased for complete script generation
+      maxTokens: phase === 4 ? 16000 : (phase === 3 ? 4000 : 1500), // Significantly increased for complete professional scripts
     });
 
     // Parse and structure the response based on phase

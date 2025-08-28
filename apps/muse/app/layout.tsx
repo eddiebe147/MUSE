@@ -7,6 +7,8 @@ import { CSPostHogProvider } from '@/providers/posthog-provider';
 import { PostHogPageView } from '@/providers/posthog-pageview';
 import { Analytics } from "@vercel/analytics/react"
 import MobileWarning from '@/components/mobile-warning';
+import { ProfileProvider } from '@/contexts/profile-context';
+import { PaywallProvider } from '@/components/paywall/paywall-provider';
 import { seoConfig } from '@/config/seo';
 
 export const metadata: Metadata = seoConfig
@@ -59,6 +61,8 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ProfileProvider>
+            <PaywallProvider>
               <CSPostHogProvider>
                 <PostHogPageView />
                 <Toaster position="top-center" />
@@ -66,6 +70,8 @@ export default async function RootLayout({
                 <MobileWarning />
                 <Analytics />
               </CSPostHogProvider>
+            </PaywallProvider>
+          </ProfileProvider>
         </ThemeProvider>
       </body>
     </html>

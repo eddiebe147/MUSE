@@ -7,11 +7,12 @@ export async function middleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
 
   // In development mode, redirect root to writing interface for easier testing
-  if (process.env.NODE_ENV === 'development' && pathname === '/') {
-    const writeUrl = request.nextUrl.clone();
-    writeUrl.pathname = '/write/test';
-    return NextResponse.redirect(writeUrl);
-  }
+  // Commented out to allow access to main homepage and profile system
+  // if (process.env.NODE_ENV === 'development' && pathname === '/') {
+  //   const writeUrl = request.nextUrl.clone();
+  //   writeUrl.pathname = '/write/test';
+  //   return NextResponse.redirect(writeUrl);
+  // }
 
   // Redirect unauthenticated users away from protected routes
   if (pathname.startsWith('/documents')) {

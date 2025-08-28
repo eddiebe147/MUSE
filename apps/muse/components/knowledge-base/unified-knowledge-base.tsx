@@ -29,21 +29,10 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { KnowledgeBaseEditor } from './knowledge-base-editor';
+import { twoTierStorage, type KnowledgeFile as TwoTierKnowledgeFile } from '@/lib/knowledge-base/two-tier-storage';
 
-interface KnowledgeFile {
-  id: string;
-  name: string;
-  type: 'document' | 'transcript' | 'character' | 'guideline' | 'note' | 'draft';
-  content?: string;
-  tags: string[];
-  size: number;
-  createdAt: Date;
-  updatedAt: Date;
-  lastAccessed?: Date;
-  starred: boolean;
-  preview?: string;
-  versionCount?: number;
-}
+// Use the two-tier knowledge file interface
+type KnowledgeFile = TwoTierKnowledgeFile;
 
 interface UnifiedKnowledgeBaseProps {
   projectId: string;
@@ -52,156 +41,7 @@ interface UnifiedKnowledgeBaseProps {
   className?: string;
 }
 
-// Load knowledge base files from localStorage
-const loadKnowledgeBaseFiles = (projectId: string): KnowledgeFile[] => {
-  if (typeof window === 'undefined') return [];
-  
-  try {
-    const savedFiles = localStorage.getItem(`kb-files-${projectId}`);
-    if (!savedFiles) return [];
-    
-    const parsed = JSON.parse(savedFiles);
-    // Ensure dates are properly converted back to Date objects
-    return parsed.map((file: any) => ({
-      ...file,
-      createdAt: new Date(file.createdAt),
-      updatedAt: new Date(file.updatedAt),
-      lastAccessed: file.lastAccessed ? new Date(file.lastAccessed) : undefined
-    }));
-  } catch (error) {
-    console.error('Error loading knowledge base files:', error);
-    return [];
-  }
-};
 
-// Save knowledge base files to localStorage
-const saveKnowledgeBaseFiles = (projectId: string, files: KnowledgeFile[]) => {
-  if (typeof window === 'undefined') return;
-  
-  try {
-    localStorage.setItem(`kb-files-${projectId}`, JSON.stringify(files));
-  } catch (error) {
-    console.error('Error saving knowledge base files:', error);
-  }
-};
-
-/*
-  {
-    id: '1',
-    name: 'Network_Treatment_Guide.pdf',
-    type: 'guideline',
-    content: `NETWORK TREATMENT STANDARDS
-    
-MUST follow standard treatment format with:
-- Title page with logline
-- Character descriptions MUST be under 50 words each
-- NEVER exceed 8 pages for one-hour drama
-- ALWAYS include act breaks clearly marked
-- Format: 12pt Courier font, 1.5 line spacing
-- Voice SHOULD be present tense, active voice
-- REQUIRED: Executive summary on page 1
-    
-STYLE GUIDELINES:
-- Tone MUST match network brand (sophisticated, character-driven)
-- NEVER use technical jargon or industry slang
-- Character motivations SHOULD be clear in every scene
-- Dialogue examples MUST sound authentic to character demographics`,
-    tags: ['guideline', 'network', 'treatment', 'active'],
-    size: 3420,
-    createdAt: new Date('2024-02-20'),
-    updatedAt: new Date('2024-02-22'),
-    lastAccessed: new Date('2024-02-22'),
-    starred: true,
-    preview: 'NETWORK TREATMENT STANDARDS - Format requirements...',
-    versionCount: 2
-  },
-  {
-    id: '2',
-    name: 'Voice_Style_Bible.txt',
-    type: 'guideline',
-    content: `WRITING VOICE GUIDELINES
-    
-TONE: Contemporary, grounded, emotionally honest
-STYLE: Present tense, immersive POV
-CHARACTER VOICE: Each character MUST have distinct speech patterns
-NEVER use: excessive exposition, on-the-nose dialogue
-ALWAYS: Show don't tell, subtext over text
-REQUIRED: Authentic regional dialects when appropriate
-    
-STRUCTURE RULES:
-- Scenes SHOULD start in media res
-- MUST end each scene with forward momentum
-- Conflict in every scene - internal or external
-- Character growth MUST be visible through action`,
-    tags: ['guideline', 'voice', 'style', 'active'],
-    size: 2890,
-    createdAt: new Date('2024-02-18'),
-    updatedAt: new Date('2024-02-18'),
-    starred: true,
-    preview: 'WRITING VOICE GUIDELINES - Tone and style requirements...'
-  },
-  {
-    id: '3',
-    name: 'Chapter 1 - Draft v3.txt',
-    type: 'draft',
-    tags: ['chapter-1', 'draft', 'current'],
-    size: 15420,
-    createdAt: new Date('2024-02-20'),
-    updatedAt: new Date('2024-02-22'),
-    lastAccessed: new Date('2024-02-22'),
-    starred: false,
-    preview: 'The morning sun cast long shadows across...',
-    versionCount: 3
-  },
-  {
-    id: '4',
-    name: 'Interview_Transcript.txt',
-    type: 'transcript',
-    tags: ['research', 'interview'],
-    size: 8900,
-    createdAt: new Date('2024-02-18'),
-    updatedAt: new Date('2024-02-18'),
-    starred: false,
-    preview: 'Q: Tell me about your experience...'
-  },
-  {
-    id: '5',
-    name: 'Character_Sarah.md',
-    type: 'character',
-    tags: ['protagonist', 'sarah'],
-    size: 2340,
-    createdAt: new Date('2024-02-21'),
-    updatedAt: new Date('2024-02-21'),
-    starred: true,
-    preview: 'Sarah is a 28-year-old journalist who...'
-  },
-  {
-    id: '6',
-    name: 'Production_Format_Standards.txt', 
-    type: 'guideline',
-    content: `PRODUCTION FORMAT REQUIREMENTS
-    
-SCREENPLAY FORMAT:
-- MUST use Courier 12pt font only
-- Scene headings: ALL CAPS, no periods
-- Character names: CENTERED, ALL CAPS
-- Parentheticals: lowercase in parentheses, centered
-- NEVER exceed 120 pages for feature
-- Page margins: 1.5" left, 1" right, top, bottom
-    
-SCENE STRUCTURE:
-- Each scene MUST advance plot or character
-- ALWAYS establish time/location clearly  
-- Transitions SHOULD be invisible
-- Action lines MUST be present tense, active voice`,
-    tags: ['guideline', 'format', 'production'],
-    size: 1840,
-    createdAt: new Date('2024-02-15'),
-    updatedAt: new Date('2024-02-20'),
-    starred: false,
-    preview: 'PRODUCTION FORMAT REQUIREMENTS - Screenplay standards...'
-  }
-*/
 
 type ViewMode = 'all' | 'recent' | 'starred' | 'drafts';
 
@@ -212,16 +52,19 @@ export function UnifiedKnowledgeBase({
   className
 }: UnifiedKnowledgeBaseProps) {
   const [files, setFiles] = useState<KnowledgeFile[]>([]);
+  const [globalFiles, setGlobalFiles] = useState<KnowledgeFile[]>([]);
+  const [storyFiles, setStoryFiles] = useState<KnowledgeFile[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('all');
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(['quick-access', 'files'])
+    new Set(['quick-access', 'global-guidelines', 'story-files'])
   );
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [targetTier, setTargetTier] = useState<'global' | 'story'>('story'); // New file destination
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load collapsed state from localStorage
@@ -236,26 +79,26 @@ export function UnifiedKnowledgeBase({
   useEffect(() => {
     if (!isHydrated) {
       setIsHydrated(true);
-      const initialFiles = loadKnowledgeBaseFiles(projectId);
-      setFiles(initialFiles);
-      // Call onFilesChange with initial files
-      onFilesChange?.(initialFiles);
+      
+      // Load from two-tier storage system
+      const globalFiles = twoTierStorage.loadGlobalKnowledge();
+      const storyFiles = twoTierStorage.loadStoryKnowledge(projectId);
+      const combinedFiles = [...globalFiles, ...storyFiles];
+      
+      setGlobalFiles(globalFiles);
+      setStoryFiles(storyFiles);
+      setFiles(combinedFiles);
+      
+      // Call onFilesChange with combined files to maintain Active Guidelines compatibility
+      onFilesChange?.(combinedFiles);
     }
   }, [projectId, isHydrated, onFilesChange]);
 
-  // Debug: Log knowledge base state changes (can be removed in production)
-  useEffect(() => {
-    console.log(`[KnowledgeBase] Project ${projectId} has ${files.length} files:`, files.map(f => f.name));
-  }, [files, projectId]);
 
   // Update file access time when files are accessed
   const updateFileAccess = useCallback((fileId: string) => {
-    const updatedFiles = files.map(file =>
-      file.id === fileId ? { ...file, lastAccessed: new Date() } : file
-    );
-    setFiles(updatedFiles);
-    saveKnowledgeBaseFiles(projectId, updatedFiles);
-    onFilesChange?.(updatedFiles);
+    // Note: updateFileAccess is now handled by individual tier operations
+    // This function should be updated to work with the two-tier system in a future refactor
   }, [files, projectId, onFilesChange]);
 
   // Save collapsed state
@@ -355,14 +198,37 @@ export function UnifiedKnowledgeBase({
           createdAt: new Date(),
           updatedAt: new Date(),
           starred: false,
-          preview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
+          preview: content.substring(0, 100) + (content.length > 100 ? '...' : ''),
+          tier: targetTier,
+          projectId: targetTier === 'story' ? projectId : undefined
         };
         newFiles.push(newFile);
       }
 
+      // Update both combined and tier-specific files
       const updatedFiles = [...files, ...newFiles];
+      
+      // Separate files by tier
+      const newGlobalFiles = newFiles.filter(f => f.tier === 'global');
+      const newStoryFiles = newFiles.filter(f => f.tier === 'story');
+      
+      const updatedGlobalFiles = [...globalFiles, ...newGlobalFiles];
+      const updatedStoryFiles = [...storyFiles, ...newStoryFiles];
+      
+      // Update state
       setFiles(updatedFiles);
-      saveKnowledgeBaseFiles(projectId, updatedFiles);
+      setGlobalFiles(updatedGlobalFiles);
+      setStoryFiles(updatedStoryFiles);
+      
+      // Save to appropriate tiers
+      if (newGlobalFiles.length > 0) {
+        twoTierStorage.saveGlobalKnowledge(updatedGlobalFiles);
+      }
+      if (newStoryFiles.length > 0) {
+        twoTierStorage.saveStoryKnowledge(projectId, updatedStoryFiles);
+      }
+      
+      // Maintain Active Guidelines compatibility
       onFilesChange?.(updatedFiles);
     } catch (error) {
       console.error('Failed to upload files:', error);
@@ -376,45 +242,49 @@ export function UnifiedKnowledgeBase({
   };
 
   const toggleStar = (fileId: string) => {
-    const updatedFiles = files.map(file =>
-      file.id === fileId ? { ...file, starred: !file.starred } : file
-    );
+    const file = files.find(f => f.id === fileId);
+    if (!file) return;
+
+    const updatedFile = { ...file, starred: !file.starred };
+    
+    // Update appropriate tier
+    if (file.tier === 'global') {
+      const updatedGlobalFiles = globalFiles.map(f => f.id === fileId ? updatedFile : f);
+      setGlobalFiles(updatedGlobalFiles);
+      twoTierStorage.saveGlobalKnowledge(updatedGlobalFiles);
+    } else {
+      const updatedStoryFiles = storyFiles.map(f => f.id === fileId ? updatedFile : f);
+      setStoryFiles(updatedStoryFiles);
+      twoTierStorage.saveStoryKnowledge(projectId, updatedStoryFiles);
+    }
+
+    // Update combined files
+    const updatedFiles = files.map(f => f.id === fileId ? updatedFile : f);
     setFiles(updatedFiles);
-    saveKnowledgeBaseFiles(projectId, updatedFiles);
     onFilesChange?.(updatedFiles);
   };
 
   const deleteFile = (fileId: string) => {
-    const updatedFiles = files.filter(file => file.id !== fileId);
+    const file = files.find(f => f.id === fileId);
+    if (!file) return;
+
+    // Delete from appropriate tier
+    if (file.tier === 'global') {
+      const updatedGlobalFiles = globalFiles.filter(f => f.id !== fileId);
+      setGlobalFiles(updatedGlobalFiles);
+      twoTierStorage.saveGlobalKnowledge(updatedGlobalFiles);
+    } else {
+      const updatedStoryFiles = storyFiles.filter(f => f.id !== fileId);
+      setStoryFiles(updatedStoryFiles);
+      twoTierStorage.saveStoryKnowledge(projectId, updatedStoryFiles);
+    }
+
+    // Update combined files
+    const updatedFiles = files.filter(f => f.id !== fileId);
     setFiles(updatedFiles);
-    saveKnowledgeBaseFiles(projectId, updatedFiles);
     onFilesChange?.(updatedFiles);
   };
 
-  // REMOVED - replaced with modal-based createNewNote below
-  const createNewNoteOLD = () => {
-    const newNote: KnowledgeFile = {
-      id: `note_${Date.now()}`,
-      name: `New Note ${new Date().toLocaleDateString()}`,
-      type: 'note',
-      content: '',
-      tags: ['note', 'draft'],
-      size: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      starred: false,
-      preview: 'Empty note - click to edit...'
-    };
-    
-    setFiles(prev => {
-      const updatedFiles = [newNote, ...prev];
-      onFilesChange?.(updatedFiles);
-      return updatedFiles;
-    });
-    setViewMode('all');
-    // Auto-select the new note for editing
-    onFileSelect?.(newNote);
-  };
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 B';
@@ -449,18 +319,33 @@ export function UnifiedKnowledgeBase({
     setIsEditorOpen(true);
   };
 
-  const handleSaveNewEntry = (fileData: Omit<KnowledgeFile, 'id' | 'createdAt' | 'updatedAt' | 'size'>) => {
+  const handleSaveNewEntry = (fileData: Omit<KnowledgeFile, 'id' | 'createdAt' | 'updatedAt' | 'size'>, tier: 'global' | 'story') => {
     const newFile: KnowledgeFile = {
       ...fileData,
       id: Date.now().toString() + Math.random().toString(36),
       size: fileData.content?.length || 0,
       createdAt: new Date(),
       updatedAt: new Date(),
+      tier,
+      projectId: tier === 'story' ? projectId : undefined
     };
 
+    // Add to appropriate tier using two-tier storage
+    if (tier === 'global') {
+      const updatedGlobalFiles = [...globalFiles, newFile];
+      setGlobalFiles(updatedGlobalFiles);
+      twoTierStorage.saveGlobalKnowledge(updatedGlobalFiles);
+    } else {
+      const updatedStoryFiles = [...storyFiles, newFile];
+      setStoryFiles(updatedStoryFiles);
+      twoTierStorage.saveStoryKnowledge(projectId, updatedStoryFiles);
+    }
+
+    // Update combined files
     const updatedFiles = [...files, newFile];
     setFiles(updatedFiles);
-    saveKnowledgeBaseFiles(projectId, updatedFiles);
+    
+    // Maintain Active Guidelines compatibility
     onFilesChange?.(updatedFiles);
   };
 
@@ -541,6 +426,29 @@ export function UnifiedKnowledgeBase({
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-7 h-8 text-xs"
           />
+        </div>
+
+        {/* Tier Selector for Upload */}
+        <div className="mb-3">
+          <div className="text-xs text-muted-foreground mb-2">Add files to:</div>
+          <div className="flex gap-1">
+            <Button
+              variant={targetTier === 'story' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTargetTier('story')}
+              className="flex-1 h-7 text-xs"
+            >
+              This Story
+            </Button>
+            <Button
+              variant={targetTier === 'global' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTargetTier('global')}
+              className="flex-1 h-7 text-xs"
+            >
+              Global Library
+            </Button>
+          </div>
         </div>
 
         {/* Quick Actions */}
@@ -677,36 +585,230 @@ export function UnifiedKnowledgeBase({
             </div>
           )}
 
-          {/* Files List */}
+          {/* Global Guidelines Section */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <button
-                onClick={() => toggleSection('files')}
+                onClick={() => toggleSection('global-guidelines')}
                 className="flex items-center gap-2 text-sm font-medium hover:text-muted-foreground transition-colors"
               >
-                {expandedSections.has('files') ? (
+                {expandedSections.has('global-guidelines') ? (
                   <ChevronDown className="size-3" />
                 ) : (
                   <ChevronRight className="size-3" />
                 )}
-                Files
+                Global Guidelines
+                <Badge variant="outline" className="text-xs ml-1 bg-blue-50 text-blue-700">
+                  All Stories
+                </Badge>
               </button>
               <span className="text-xs text-muted-foreground">
-                {filteredFiles.length} {viewMode !== 'all' && `of ${files.length}`}
+                {globalFiles.filter(file => {
+                  const matchesSearch = searchQuery === '' || 
+                    file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    file.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (file.preview && file.preview.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const matchesTags = selectedTags.length === 0 ||
+                    selectedTags.every(tag => file.tags.includes(tag));
+                  return matchesSearch && matchesTags;
+                }).length}
               </span>
             </div>
 
-            {expandedSections.has('files') && (
-              <div className="space-y-2">
-                {filteredFiles.length === 0 ? (
-                  <div className="text-center py-8">
-                    <FolderOpen className="size-8 mx-auto mb-2 text-muted-foreground opacity-50" />
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {searchQuery || selectedTags.length > 0 
-                        ? 'No files match your filters' 
-                        : 'No knowledge base content yet'}
+            {expandedSections.has('global-guidelines') && (
+              <div className="space-y-2 mb-4">
+                {globalFiles.filter(file => {
+                  const matchesSearch = searchQuery === '' || 
+                    file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    file.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (file.preview && file.preview.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const matchesTags = selectedTags.length === 0 ||
+                    selectedTags.every(tag => file.tags.includes(tag));
+                  return matchesSearch && matchesTags;
+                }).length === 0 ? (
+                  <div className="text-center py-6 bg-blue-50/50 rounded-lg border-dashed border-2 border-blue-200">
+                    <Archive className="size-6 mx-auto mb-2 text-blue-400" />
+                    <p className="text-sm text-blue-600 mb-2">No global guidelines yet</p>
+                    <p className="text-xs text-blue-500">
+                      Add universal writing standards and network requirements
                     </p>
-                    {!searchQuery && selectedTags.length === 0 && (
+                  </div>
+                ) : (
+                  globalFiles.filter(file => {
+                    const matchesSearch = searchQuery === '' || 
+                      file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      file.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                      (file.preview && file.preview.toLowerCase().includes(searchQuery.toLowerCase()));
+                    const matchesTags = selectedTags.length === 0 ||
+                      selectedTags.every(tag => file.tags.includes(tag));
+                    return matchesSearch && matchesTags;
+                  }).map(file => (
+                    <Card 
+                      key={file.id}
+                      className="cursor-pointer transition-all duration-200 hover:shadow-sm hover:bg-blue-50/50 border-blue-100"
+                      onClick={() => {
+                        onFileSelect?.(file);
+                        updateFileAccess(file.id);
+                      }}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-start gap-2">
+                          <div className="text-blue-600 mt-0.5">
+                            {getFileIcon(file.type)}
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-1">
+                              <div className="flex-1">
+                                <h4 className="font-medium text-xs break-words leading-tight">
+                                  {file.name}
+                                </h4>
+                                {file.versionCount && file.versionCount > 1 && (
+                                  <span className="text-xs text-muted-foreground">
+                                    v{file.versionCount}
+                                  </span>
+                                )}
+                              </div>
+                              
+                              <div className="flex items-center gap-1 shrink-0">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleStar(file.id);
+                                  }}
+                                  className="size-5 p-0"
+                                >
+                                  <Star className={cn(
+                                    "w-3 h-3",
+                                    file.starred ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
+                                  )} />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteFile(file.id);
+                                  }}
+                                  className="size-5 p-0 hover:text-red-600"
+                                >
+                                  <Trash2 className="size-3" />
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            {file.preview && (
+                              <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                                {file.preview}
+                              </p>
+                            )}
+                            
+                            <div className="flex items-center justify-between mt-2 gap-2">
+                              <div className="flex gap-1 flex-wrap">
+                                {file.tags.slice(0, 2).map((tag, index) => (
+                                  <Badge key={index} variant="secondary" className="text-xs px-1 py-0">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                              </div>
+                              
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <span>{formatFileSize(file.size)}</span>
+                                <span>•</span>
+                                <span>{formatDate(file.updatedAt)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Story Files Section */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <button
+                onClick={() => toggleSection('story-files')}
+                className="flex items-center gap-2 text-sm font-medium hover:text-muted-foreground transition-colors"
+              >
+                {expandedSections.has('story-files') ? (
+                  <ChevronDown className="size-3" />
+                ) : (
+                  <ChevronRight className="size-3" />
+                )}
+                Story Files
+                <Badge variant="outline" className="text-xs ml-1 bg-green-50 text-green-700">
+                  This Project
+                </Badge>
+              </button>
+              <span className="text-xs text-muted-foreground">
+                {storyFiles.filter(file => {
+                  const matchesSearch = searchQuery === '' || 
+                    file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    file.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (file.preview && file.preview.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const matchesTags = selectedTags.length === 0 ||
+                    selectedTags.every(tag => file.tags.includes(tag));
+                  let matchesView = true;
+                  const now = new Date();
+                  const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                  
+                  switch (viewMode) {
+                    case 'recent':
+                      matchesView = file.lastAccessed ? file.lastAccessed > dayAgo : file.updatedAt > dayAgo;
+                      break;
+                    case 'starred':
+                      matchesView = file.starred;
+                      break;
+                    case 'drafts':
+                      matchesView = file.type === 'draft';
+                      break;
+                  }
+                  return matchesSearch && matchesTags && matchesView;
+                }).length}
+              </span>
+            </div>
+
+            {expandedSections.has('story-files') && (
+              <div className="space-y-2">
+                {storyFiles.filter(file => {
+                  const matchesSearch = searchQuery === '' || 
+                    file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    file.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (file.preview && file.preview.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const matchesTags = selectedTags.length === 0 ||
+                    selectedTags.every(tag => file.tags.includes(tag));
+                  let matchesView = true;
+                  const now = new Date();
+                  const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                  
+                  switch (viewMode) {
+                    case 'recent':
+                      matchesView = file.lastAccessed ? file.lastAccessed > dayAgo : file.updatedAt > dayAgo;
+                      break;
+                    case 'starred':
+                      matchesView = file.starred;
+                      break;
+                    case 'drafts':
+                      matchesView = file.type === 'draft';
+                      break;
+                  }
+                  return matchesSearch && matchesTags && matchesView;
+                }).length === 0 ? (
+                  <div className="text-center py-6">
+                    <FolderOpen className="size-6 mx-auto mb-2 text-muted-foreground opacity-50" />
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {searchQuery || selectedTags.length > 0 || viewMode !== 'all'
+                        ? 'No story files match your filters' 
+                        : 'No story-specific content yet'}
+                    </p>
+                    {!searchQuery && selectedTags.length === 0 && viewMode === 'all' && (
                       <div className="space-y-2">
                         <Button
                           variant="outline"
@@ -718,13 +820,36 @@ export function UnifiedKnowledgeBase({
                           Create your first entry
                         </Button>
                         <p className="text-xs text-muted-foreground">
-                          Add guidelines, characters, or reference materials
+                          Add characters, drafts, or story-specific materials
                         </p>
                       </div>
                     )}
                   </div>
                 ) : (
-                  filteredFiles.map(file => (
+                  storyFiles.filter(file => {
+                    const matchesSearch = searchQuery === '' || 
+                      file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      file.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                      (file.preview && file.preview.toLowerCase().includes(searchQuery.toLowerCase()));
+                    const matchesTags = selectedTags.length === 0 ||
+                      selectedTags.every(tag => file.tags.includes(tag));
+                    let matchesView = true;
+                    const now = new Date();
+                    const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                    
+                    switch (viewMode) {
+                      case 'recent':
+                        matchesView = file.lastAccessed ? file.lastAccessed > dayAgo : file.updatedAt > dayAgo;
+                        break;
+                      case 'starred':
+                        matchesView = file.starred;
+                        break;
+                      case 'drafts':
+                        matchesView = file.type === 'draft';
+                        break;
+                    }
+                    return matchesSearch && matchesTags && matchesView;
+                  }).map(file => (
                     <Card 
                       key={file.id}
                       className="cursor-pointer transition-all duration-200 hover:shadow-sm hover:bg-muted/50"

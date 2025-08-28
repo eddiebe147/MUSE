@@ -73,11 +73,38 @@ export function useWritingCanvas({
 
   // Load initial data from localStorage
   useEffect(() => {
+    // Check for workflow export data first (from Phase 4 completion)
+    const workflowExportContent = localStorage.getItem('muse_canvas_content');
+    const workflowExportFormat = localStorage.getItem('muse_canvas_format');
+    const workflowExportMetadata = localStorage.getItem('muse_canvas_metadata');
+    
+    // Regular canvas data
     const savedContent = localStorage.getItem(getStorageKey('content'));
     const savedVersions = localStorage.getItem(getStorageKey('versions'));
     const savedStats = localStorage.getItem(getStorageKey('stats'));
 
-    if (savedContent && !initialContent) {
+    // Prioritize workflow export data if available
+    if (workflowExportContent && !initialContent) {
+      console.log('Loading content from Phase 4 workflow export');
+      setContent(workflowExportContent);
+      
+      // Create a version for this workflow export
+      const version: Version = {
+        id: `workflow-export-${Date.now()}`,
+        content: workflowExportContent,
+        timestamp: new Date(),
+        wordCount: workflowExportContent.split(' ').length,
+        title: `Phase 4 Export - ${workflowExportFormat || 'Script'}`
+      };
+      setVersions(prev => [version, ...prev]);
+      
+      // Save to regular canvas storage and clear workflow export
+      localStorage.setItem(getStorageKey('content'), workflowExportContent);
+      localStorage.removeItem('muse_canvas_content');
+      localStorage.removeItem('muse_canvas_format');
+      localStorage.removeItem('muse_canvas_metadata');
+      
+    } else if (savedContent && !initialContent) {
       setContent(savedContent);
     }
     

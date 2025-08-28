@@ -1037,3 +1037,78 @@ export async function getStoryIntelligenceCounts({ userId }: { userId: string })
     };
   }
 }
+
+// --- User Profile Queries --- //
+
+export async function getUserById({ userId }: { userId: string }): Promise<typeof schema.user.$inferSelect | null> {
+  try {
+    const data = await db
+      .select()
+      .from(schema.user)
+      .where(eq(schema.user.id, userId))
+      .limit(1);
+
+    return data[0] || null;
+  } catch (error) {
+    console.error(`[DB Query - getUserById] Error fetching user ${userId}:`, error);
+    return null;
+  }
+}
+
+export async function updateUserProfile({ 
+  userId, 
+  name, 
+  email 
+}: { 
+  userId: string; 
+  name?: string; 
+  email?: string; 
+}): Promise<typeof schema.user.$inferSelect> {
+  try {
+    const updates: Partial<typeof schema.user.$inferInsert> = {};
+    
+    if (name !== undefined) updates.name = name;
+    if (email !== undefined) updates.email = email;
+    
+    if (Object.keys(updates).length === 0) {
+      throw new Error('No updates provided');
+    }
+
+    const [updatedUser] = await db
+      .update(schema.user)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(schema.user.id, userId))
+      .returning();
+
+    if (!updatedUser) {
+      throw new Error('User not found or update failed');
+    }
+
+    return updatedUser;
+  } catch (error) {
+    console.error(`[DB Query - updateUserProfile] Error updating user ${userId}:`, error);
+    throw error;
+  }
+}
+
+// --- Usage Tracking Queries --- //
+
+export async function getUserUsage({ userId }: { userId: string }): Promise<any | null> {
+  // For now, usage tracking is handled in memory/localStorage
+  // This will be expanded when a proper usage table is added to the schema
+  console.log(`[DB Query - getUserUsage] In-memory usage tracking for user ${userId}`);
+  return null;
+}
+
+export async function updateUserUsage({ 
+  userId, 
+  usage 
+}: { 
+  userId: string; 
+  usage: any; 
+}): Promise<any> {
+  // For now, usage tracking is handled in memory/localStorage
+  // This will be expanded when a proper usage table is added to the schema
+  console.log(`[DB Query - updateUserUsage] In-memory usage tracking for user ${userId}`);
+  return usage;
+}

@@ -7,6 +7,7 @@ import { UnifiedKnowledgeBase } from '../knowledge-base/unified-knowledge-base';
 import { StreamlinedWritingTools } from '../writing-tools/streamlined-writing-tools';
 import { ResizableSidebar } from '../writing-workflow/resizable-sidebar';
 import { FourPhaseInterface } from '../writing-workflow/four-phase-interface';
+import { FloatingArcButton } from './floating-arc-button';
 
 interface CanvasInterfaceProps {
   projectId: string;
@@ -18,14 +19,16 @@ interface CanvasInterfaceProps {
     phase4?: any;
     transcriptAnalysis?: any;
   };
+  isGuestSession?: boolean;
   className?: string;
 }
 
-type SidebarType = 'none' | 'workflow';
+type SidebarType = 'none' | 'workflow' | 'arc';
 
 export function CanvasInterface({ 
   projectId, 
   initialData, 
+  isGuestSession = false,
   className 
 }: CanvasInterfaceProps) {
   const [activeSidebar, setActiveSidebar] = useState<SidebarType>('none');
@@ -92,6 +95,12 @@ export function CanvasInterface({
     setAiSuggestions(prev => prev.filter(s => s !== suggestion));
   };
 
+  // Handle opening ARC Generator
+  const handleOpenArcGenerator = () => {
+    // Open the workflow interface which contains ARC functionality
+    setActiveSidebar('workflow');
+  };
+
   // If workflow mode is active, show the full workflow interface
   if (activeSidebar === 'workflow') {
     return (
@@ -136,7 +145,14 @@ export function CanvasInterface({
         isGenerating={isGeneratingAI}
         onGenerateSuggestions={handleGenerateAISuggestions}
         onApplySuggestion={handleApplySuggestion}
-        onOpenArcGenerator={() => toggleSidebar('workflow')}
+        onOpenArcGenerator={handleOpenArcGenerator}
+      />
+
+      {/* Floating ARC Button - appears when user has written enough content */}
+      <FloatingArcButton
+        onOpenArcGenerator={handleOpenArcGenerator}
+        wordCount={writingStats.wordCount}
+        minWordCount={200}
       />
     </div>
   );
